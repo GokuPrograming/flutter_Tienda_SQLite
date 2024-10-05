@@ -1,4 +1,4 @@
-# store_sqlite
+# Tienda en SQLite y Flutter
 
 A new Flutter project.
 
