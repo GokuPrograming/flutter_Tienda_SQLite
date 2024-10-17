@@ -119,26 +119,26 @@ class TiendaDataBase {
     );
   } // initdatabase
 
-  Future<int> INSERT(String table, Map<String, dynamic> row) async {
-    var con = await database;
-    return await con.insert(table, row);
-  }
+  // Future<int> INSERT(String table, Map<String, dynamic> row) async {
+  //   var con = await database;
+  //   return await con.insert(table, row);
+  // }
 
-  Future<int> UPDATE(String table, Map<String, dynamic> row) async {
-    var con = await database;
-    return await con
-        .update(table, row, where: 'idMovie = ?', whereArgs: [row['idMovie']]);
-  }
+  // Future<int> UPDATE(String table, Map<String, dynamic> row) async {
+  //   var con = await database;
+  //   return await con
+  //       .update(table, row, where: 'idMovie = ?', whereArgs: [row['idMovie']]);
+  // }
 
-  Future<int> DELETE(String table, int idMovie) async {
-    var con = await database;
-    return await con.delete(table, where: 'idMovie = ?', whereArgs: [idMovie]);
-  }
+  // Future<int> DELETE(String table, int idMovie) async {
+  //   var con = await database;
+  //   return await con.delete(table, where: 'idMovie = ?', whereArgs: [idMovie]);
+  // }
 
-  Future<List<CategoriaModel>?> SELECT() async {
-    var con = await database;
-    var result = await con.query('categoria');
-    return result.map((categoria)=>CategoriaModel.fromMap(categoria)).toList();
-  }
+  // Future<List<CategoriaModel>?> SELECT() async {
+  //   var con = await database;
+  //   var result = await con.query('categoria');
+  //   return result.map((categoria)=>CategoriaModel.fromMap(categoria)).toList();
+  // }
 
 }
