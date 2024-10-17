@@ -2,8 +2,9 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:store_sqlite/models/categoria_model.dart';
 
-class MoviesDatabase {
+class TiendaDataBase {
   static final NAMEDB = 'PizzeriaDB';
   static final VERSIONDB = 1;
 
@@ -104,6 +105,16 @@ class MoviesDatabase {
           CONSTRAINT listaPedido_producto_fk FOREIGN KEY(id_producto) REFERENCES producto(id_producto)
         );''';
         db.execute(query9);
+        String query10 = '''
+        INSERT INTO categoria
+        (categoria) 
+        VALUES
+        ('Pizza'),
+        ('Refreco'),
+        ('Agua')
+        ;
+''';
+        db.execute(query10);
       },
     );
   } // initdatabase
@@ -124,28 +135,10 @@ class MoviesDatabase {
     return await con.delete(table, where: 'idMovie = ?', whereArgs: [idMovie]);
   }
 
-  // Future<List<MoviesDAO>?> SELECT() async {
-  //   var con = await database;
-  //   var result = await con.query('tblmovies');
-  //   return result.map((movie) => MoviesDAO.fromMap(movie)).toList();
-  // }
+  Future<List<CategoriaModel>?> SELECT() async {
+    var con = await database;
+    var result = await con.query('categoria');
+    return result.map((categoria)=>CategoriaModel.fromMap(categoria)).toList();
+  }
+
 }
-
-/* CREATE TABLE tblmovies(
-          idMovie INTEGER PRIMARY KEY,
-          nameMovie VARCHAR(100),
-          overview TEXT,
-          idGenre char(1),
-          imgMovie VARCHAR(150),
-          releaseDate CHAR(10),
-          CONSTRAINT fk_gen FOREIGN KEY(idGenre) REFERENCES tblgenre(idGenre)
-
-CONSTRAINT fk_gen FOREIGN KEY(idGenre) REFERENCES tblgenre(idGenre)
-
-            CREATE TABLE tblgenre(
-          idGenre char(1) PRIMARY KEY,
-          dscgenre VARCHAR(50)  
-        );
-        
-        
-        );*/
