@@ -9,7 +9,7 @@ class ListapedidoController {
     return await db.insert(table, row);
   }
 
-  Future<List<ListaPedidoModel>?> mostrarTodasLasCategorias() async {
+  Future<List<ListaPedidoModel>?> mostrarTodosLosListaPedidos() async {
     var con = await _dataBase.database;
     var result = await con.query('lista_pedido');
     return result.map((lista_pedido)=>ListaPedidoModel.fromMap(lista_pedido)).toList();

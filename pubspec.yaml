@@ -32,6 +32,9 @@ dependencies:
     sdk: flutter
   sqflite: ^2.3.3+1
   path_provider: ^2.1.4
+  flutter_product_card: ^0.0.7
+  animated_botton_navigation: ^0.0.7
+  animated_floating_buttons: ^0.0.2
 
 
   # The following adds the Cupertino Icons font to your application.

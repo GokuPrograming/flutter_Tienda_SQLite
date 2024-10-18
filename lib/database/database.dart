@@ -35,7 +35,7 @@ class TiendaDataBase {
          CREATE TABLE producto(
           id_producto INTEGER PRIMARY KEY,
           producto VARCHAR(100),
-          precio NUMERIC,
+          precio REAL,
           descripcion VARCHAR(300),
           id_categoria INT,
           img_producto VARCHAR(150),
@@ -96,15 +96,20 @@ class TiendaDataBase {
           CONSTRAINT pedido_direccion_fk FOREIGN KEY(id_direccion) REFERENCES direccion(id_direccion)
         );''';
         db.execute(query8);
+
         String query9 = '''
          CREATE TABLE lista_pedido(
           id_lista_pedido INTEGER PRIMARY KEY,
           id_producto INT,
+          id_pedido int,
           cantidad INT,
+          precio Real,
           subtotal NUMERIC,
+          Constraint listaPpedido_pedido_fk  Foreign key(id_pedido) references pedido(id_pedido),
           CONSTRAINT listaPedido_producto_fk FOREIGN KEY(id_producto) REFERENCES producto(id_producto)
         );''';
         db.execute(query9);
+
         String query10 = '''
         INSERT INTO categoria
         (categoria) 
@@ -115,6 +120,52 @@ class TiendaDataBase {
         ;
 ''';
         db.execute(query10);
+
+        String query11 = '''
+ INSERT INTO producto
+    (producto, precio, descripcion, id_categoria) 
+VALUES
+    ('Pizza Grande de Peperoni', 200.50, 'Pizza Grande de 10 Rebanadas, con mucho peperoni y queso, orilla normal', 1),
+    ('Refresco 2L Pepsi Sabor cola', 29.00, 'Pepsi 2L sabor Cola', 2),
+    ('Agua de Jamaica 1L Marca La mamá de Pichis', 25.00, 'Agua de jamaica 100% natural', 3);
+
+''';
+        db.execute(query11);
+
+        String query12 = '''
+        Insert into status(status)values('completado'),('En Proceso'),('cancelado')
+        ''';
+        db.execute(query12);
+
+        String query13 = '''
+        insert into municipio(municipio)values('Cortazar'),('Celaya'),('Salamanca'),('Villagran')
+        ''';
+        db.execute(query13);
+        String query14 = '''
+        insert into comunidad(comunidad,id_municipio)values('Tierra Fria',1)
+        ''';
+        db.execute(query14);
+        String query15 = '''
+        insert into direccion(id_comunidad,calle,colonia,no_exterior,no_interior,num_telefono,nombre_cliente)
+        values                 (1,'Alameda','Alameda',104,104,'4111549487','Miguel Vera Franco')
+        ''';
+        db.execute(query15);
+
+        String query17 = '''
+        insert into pedido(id_status,id_direccion,fecha_entrega)values(1,1,'2024-10-17')
+        ''';
+        db.execute(query17);
+
+        String query16 = '''
+      INSERT INTO lista_pedido(id_pedido, id_producto, cantidad, subtotal, precio)
+      VALUES 
+      (1, 1, 2, 211, 105), 
+      (1, 3, 3, 333, 111)
+        ''';
+        db.execute(query16);
+        // int? id_lista_pedido, id_producto, cantidad;
+        // double? subtotal;
+        print('se creo la base de datos');
       },
     );
   } // initdatabase
@@ -140,5 +191,4 @@ class TiendaDataBase {
   //   var result = await con.query('categoria');
   //   return result.map((categoria)=>CategoriaModel.fromMap(categoria)).toList();
   // }
-
 }
