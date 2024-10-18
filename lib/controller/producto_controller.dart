@@ -15,6 +15,18 @@ class ProductoController {
     return result.map((producto) => ProductoModel.fromMap(producto)).toList();
   }
 
+  Future<List<Map<String, dynamic>>?> mostrarProductosConCategoria() async {
+    var con = await _dataBase.database;
+    var result = await con.rawQuery(
+      '''
+    SELECT *
+    FROM producto p
+    inner join categoria c on p.id_categoria=c.id_categoria 
+  ''',
+    );
+    return result;
+  }
+
   Future<int> actualizarProducto(String table, Map<String, dynamic> row) async {
     var con = await _dataBase.database;
     return await con.update(table, row,

@@ -4,7 +4,7 @@ import 'package:store_sqlite/controller/pedido_controller.dart';
 class InformacionClientewidget extends StatefulWidget {
   final int? id;
   const InformacionClientewidget(this.id,
-      {super.key}); // Constructor modificado
+      {super.key}); 
 
   @override
   State<InformacionClientewidget> createState() =>

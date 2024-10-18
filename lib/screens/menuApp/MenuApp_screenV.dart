@@ -5,6 +5,7 @@ import 'package:store_sqlite/database/database.dart';
 import 'package:store_sqlite/models/producto_model.dart';
 import 'package:flutter_product_card/flutter_product_card.dart';
 import 'package:store_sqlite/screens/menuApp/widgetMenuApp/PedidosListaWidget.dart';
+import 'package:store_sqlite/screens/menuApp/widgetMenuApp/drawer.dart';
 
 class MenuappScreenv extends StatefulWidget {
   const MenuappScreenv({super.key});
@@ -14,8 +15,6 @@ class MenuappScreenv extends StatefulWidget {
 }
 
 class _MenuappScreenvState extends State<MenuappScreenv> {
-  late TiendaDataBase categoriaDB;
-  late ProductoController productoController;
   int _currentIndex = 0;
 
   final List<Widget> _pages = [
@@ -25,19 +24,77 @@ class _MenuappScreenvState extends State<MenuappScreenv> {
   ];
 
   @override
-  void initState() {
-    super.initState();
-    productoController = ProductoController();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: SafeArea(
+        child: Container(
+          child: ListTileTheme(
+            textColor: Colors.white,
+            iconColor: Colors.white,
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Container(
+                  width: 128.0,
+                  height: 128.0,
+                  margin: const EdgeInsets.only(
+                    top: 24.0,
+                    bottom: 64.0,
+                  ),
+                  clipBehavior: Clip.antiAlias,
+                  decoration: BoxDecoration(
+                    color: Colors.black26,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Image.asset(
+                    'assets/img/logo_pizza.jfif',
+                  ),
+                ),
+                ListTile(
+                  onTap: () {},
+                  leading: Icon(Icons.food_bank),
+                  title: Text('Productos'),
+                ),
+                ListTile(
+                  onTap: () {},
+                  leading: Icon(Icons.category),
+                  title: Text('Categorias'),
+                ),
+                ListTile(
+                  onTap: () {},
+                  leading: Icon(Icons.location_city),
+                  title: Text('Municipios'),
+                ),
+                ListTile(
+                  onTap: () {},
+                  leading: Icon(Icons.gps_fixed),
+                  title: Text('Comunidades'),
+                ),
+                Spacer(),
+                DefaultTextStyle(
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.white54,
+                  ),
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(
+                      vertical: 16.0,
+                    ),
+                    child: Text('Terms of Service | Privacy Policy'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
       appBar: AppBar(
         title: Text('Glorys Pizza Admin App'),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamed(context, '/crearPedido');
+            },
             icon: Icon(Icons.add),
           ),
         ],

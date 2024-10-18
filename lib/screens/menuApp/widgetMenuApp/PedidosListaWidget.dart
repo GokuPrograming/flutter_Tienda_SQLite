@@ -38,22 +38,22 @@ class _PedidoslistawidgetState extends State<Pedidoslistawidget> {
   Icon getIconStatus(int? idStatus) {
     switch (idStatus) {
       case 1:
-        return Icon(
+        return const Icon(
           Icons.done,
           color: Colors.green,
         );
       case 2:
-        return Icon(
+        return const Icon(
           Icons.cancel,
           color: Colors.red,
         );
       case 3:
-        return Icon(
+        return const Icon(
           Icons.hourglass_empty,
           color: Colors.grey,
         );
     }
-    return Icon(Icons.error);
+    return const Icon(Icons.error);
   }
 
   @override
@@ -73,7 +73,8 @@ class _PedidoslistawidgetState extends State<Pedidoslistawidget> {
                     onTap: () {
                       Navigator.pushNamed(context, '/informacionPedido',
                           arguments: {
-                            'id_pedido': snapshot.data![index].id_pedido
+                            'id_pedido': snapshot.data![index].id_pedido,
+                            'id_status': snapshot.data![index].id_status
                           });
                     },
                     child: Container(
@@ -98,7 +99,7 @@ class _PedidoslistawidgetState extends State<Pedidoslistawidget> {
                             child: Text(
                               'No_pedido: ${snapshot.data![index].id_pedido}\nFecha entrega: ${snapshot.data![index].fecha_entrega}',
                               textAlign: TextAlign.left,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 16,
                                 // color: Colors.black,
                               ),
@@ -122,7 +123,7 @@ class _PedidoslistawidgetState extends State<Pedidoslistawidget> {
                 child: Text(snapshot.error.toString()),
               );
             } else {
-              return Center(
+              return const Center(
                 child: CircularProgressIndicator(),
               );
             }

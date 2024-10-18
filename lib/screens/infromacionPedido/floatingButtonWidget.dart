@@ -15,7 +15,9 @@ class _FloatingbuttonwidgetState extends State<Floatingbuttonwidget> {
   Widget float1() {
     return Container(
       child: FloatingActionButton(
-        onPressed: null,
+        onPressed: () {
+          Navigator.pushNamed(context, '/crearPedido');
+        },
         heroTag: "new",
         tooltip: 'First button',
         child: Icon(Icons.add),
