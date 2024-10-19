@@ -15,9 +15,9 @@ class _PedidoslistawidgetState extends State<Pedidoslistawidget> {
   @override
   void initState() {
     pedidoController = PedidoController();
-    print('////////////////////////////////////////////');
-    pedidoController.mostrarPedidosConListaPedido(1);
-    print('////////////////////////////////////////////');
+    // print('////////////////////////////////////////////');
+    // pedidoController.mostrarPedidosConListaPedido(1);
+    // print('////////////////////////////////////////////');
     super.initState();
   }
 
@@ -25,9 +25,9 @@ class _PedidoslistawidgetState extends State<Pedidoslistawidget> {
     switch (idStatus) {
       case 1:
         return Colors.green; // Si el idStatus es 1, el color será verde.
-      case 2:
-        return Colors.red; // Si el idStatus es 2, el color será rojo.
       case 3:
+        return Colors.red; // Si el idStatus es 2, el color será rojo.
+      case 2:
         return Colors.white; // Si el idStatus es 3, el color será blanco.
       default:
         return Colors
@@ -42,12 +42,12 @@ class _PedidoslistawidgetState extends State<Pedidoslistawidget> {
           Icons.done,
           color: Colors.green,
         );
-      case 2:
+      case 3:
         return const Icon(
           Icons.cancel,
           color: Colors.red,
         );
-      case 3:
+      case 2:
         return const Icon(
           Icons.hourglass_empty,
           color: Colors.grey,

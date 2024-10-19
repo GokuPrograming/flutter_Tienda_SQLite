@@ -152,7 +152,7 @@ VALUES
         db.execute(query15);
 
         String query17 = '''
-        insert into pedido(id_status,id_direccion,fecha_entrega)values(1,1,'2024-10-17')
+        insert into pedido(id_status,id_direccion,fecha_entrega)values(1,1,'2024-10-18'),(2,1,'2024-11-19'),(3,1,'2024-11-20')
         ''';
         db.execute(query17);
 
@@ -160,7 +160,9 @@ VALUES
       INSERT INTO lista_pedido(id_pedido, id_producto, cantidad, subtotal, precio)
       VALUES 
       (1, 1, 2, 211, 105), 
-      (1, 3, 3, 333, 111)
+      (1, 3, 3, 333, 111),
+      (2, 3, 3, 333, 111),
+      (3, 3, 3, 333, 111)
         ''';
         db.execute(query16);
         // int? id_lista_pedido, id_producto, cantidad;

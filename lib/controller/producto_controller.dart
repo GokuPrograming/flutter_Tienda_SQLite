@@ -27,6 +27,7 @@ class ProductoController {
     return result;
   }
 
+
   Future<int> actualizarProducto(String table, Map<String, dynamic> row) async {
     var con = await _dataBase.database;
     return await con.update(table, row,

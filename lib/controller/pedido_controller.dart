@@ -41,6 +41,18 @@ class PedidoController {
     return result;
   }
 
+  Future<List<Map<String, dynamic>>?> mostrarTodosLosPedidosSinId() async {
+    var con = await _dataBase.database;
+    var result = await con.rawQuery('''
+    SELECT *
+    FROM pedido p
+    inner join direccion d on p.id_direccion=d.id_direccion
+  '''); // Aquí se pasa el parámetro
+
+    print(result);
+    return result;
+  }
+
   Future<List<Map<String, dynamic>>?> mostrarPedidoDatosCliente(
       int? id_pedido) async {
     var con = await _dataBase.database;

@@ -4,6 +4,7 @@ import 'package:store_sqlite/controller/producto_controller.dart';
 import 'package:store_sqlite/database/database.dart';
 import 'package:store_sqlite/models/producto_model.dart';
 import 'package:flutter_product_card/flutter_product_card.dart';
+import 'package:store_sqlite/screens/calendarScreen.dart';
 import 'package:store_sqlite/screens/menuApp/widgetMenuApp/PedidosListaWidget.dart';
 import 'package:store_sqlite/screens/menuApp/widgetMenuApp/drawer.dart';
 
@@ -19,7 +20,7 @@ class _MenuappScreenvState extends State<MenuappScreenv> {
 
   final List<Widget> _pages = [
     Center(child: Pedidoslistawidget()),
-    Center(child: Text('Search Page')),
+    Center(child: TableBasicsExample()),
     Center(child: Text('Profile Page')),
   ];
 
@@ -100,6 +101,14 @@ class _MenuappScreenvState extends State<MenuappScreenv> {
         ],
         backgroundColor: const Color.fromARGB(131, 33, 31, 31),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: Icon(
+          Icons.add,
+        ),
+        tooltip: 'Nuevo',
+        
+      ),
       body: _pages[_currentIndex],
       bottomNavigationBar: AnimatedBottomNavigation(
         height: 70,
@@ -108,7 +117,7 @@ class _MenuappScreenvState extends State<MenuappScreenv> {
         icons: [
           Icons.motorcycle,
           Icons.calendar_month,
-          Icons.person,
+          Icons.dashboard,
         ],
         currentIndex: _currentIndex,
         onTapChange: (index) {

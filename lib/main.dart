@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Material App',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark(),
+      theme: ThemeData.light(),
       home: const Menuappresponsivescreen(
           pantallaVerticalMobile: MenuappScreenv(),
           pantallaHorizontalMobile: MenuappScreenH()),
