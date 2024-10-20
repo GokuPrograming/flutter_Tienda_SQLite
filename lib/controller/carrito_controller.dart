@@ -14,6 +14,16 @@ class CarritoController {
     var result = await con.query('id_carrito');
     return result.map((carrito) => CarritoModel.fromMap(carrito)).toList();
   }
+    Future<List<Map<String, dynamic>>?> mostrarTodosLosCarritos() async {
+    var con = await _dataBase.database;
+    var result = await con.rawQuery('''
+    SELECT *
+    FROM carrito c
+    inner join producto p on c.id_producto = p.id_producto
+  '''); // Aquí se pasa el parámetro
+    print(result);
+    return result;
+  }
 
   Future<int> actualizarCarrito(String table, Map<String, dynamic> row) async {
     var con = await _dataBase.database;
