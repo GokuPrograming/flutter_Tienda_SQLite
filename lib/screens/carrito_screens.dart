@@ -1,6 +1,10 @@
 import 'package:counter_button/counter_button.dart';
 import 'package:flutter/material.dart';
 import 'package:store_sqlite/controller/carrito_controller.dart';
+import 'package:store_sqlite/controller/direccion_controller.dart';
+import 'package:store_sqlite/controller/listaPedido_controller.dart';
+import 'package:store_sqlite/models/lista_pedido_model.dart';
+import 'package:store_sqlite/screens/carrito_widgets/dropDown_Municipio_Widget.dart';
 
 class CarritoScreens extends StatefulWidget {
   const CarritoScreens({super.key});
@@ -83,6 +87,12 @@ class _CarritoScreensState extends State<CarritoScreens> {
                         prefixIcon: Icon(Icons.numbers),
                       ),
                     ),
+                    const Row(
+                      children: [
+                        Text('Municipio'),
+                        DropdownMunicipioWidget(),
+                      ],
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -97,25 +107,32 @@ class _CarritoScreensState extends State<CarritoScreens> {
                           padding: const EdgeInsets.all(15.0),
                           child: ElevatedButton(
                             onPressed: () {
-                              // Acceder a todos los datos al presionar "Completado"
+                              // Acceder a los datos al presionar "Completado"
                               String nombreCliente = conNombreCliente.text;
                               String telefono = conTelefono.text;
                               String colonia = conColonia.text;
                               String calle = conCalle.text;
                               String noExterior = conNoExterior.text;
 
-                              // Puedes realizar cualquier acción con los datos aquí,
-                              // como guardarlos en la base de datos o mostrarlos en consola.
+                              // Aquí accedes a los valores de los contadores y haces lo necesario
                               print('Nombre del Cliente: $nombreCliente');
                               print('Teléfono: $telefono');
                               print('Colonia: $colonia');
                               print('Calle: $calle');
                               print('Número Exterior: $noExterior');
-                              print('Valores de los contadores: $_counterValues');
+                              print(
+                                  'Valores de los contadores: $_counterValues');
 
-                              // Aquí podrías enviar los datos a tu base de datos usando carritoController
+                              // Puedes procesar los datos aquí, por ejemplo, guardarlos en tu base de datos
+                              // usando carritoController.
 
                               // Cerrar el modal
+                              // Aquí podrías enviar los datos a tu base de datos usando carritoController
+
+                              // ingresarDireccion(nombreCliente, telefono,
+                              //     colonia, calle, noExterior);
+                              // Cerrar el modal
+
                               Navigator.pop(context);
                             },
                             child: Row(
@@ -224,5 +241,30 @@ class _CarritoScreensState extends State<CarritoScreens> {
         },
       ),
     );
+  }
+
+  void ingresarDireccion(String nombreCliente, String NumeroTel, String Colonia,
+      String Calle, String NumExterior) {
+    print('se ingresaron los datos');
+   
+   try {
+     
+   } catch (e) {
+     
+   }
+    DireccionController direccionController = DireccionController();
+    direccionController.insertDireccion('direccion', {
+      'Id_comunidad': 1,
+      'calle': '${Calle}',
+      'no_exterior': '${NumExterior}',
+      'colonia': '$Colonia',
+      'no_interior': '',
+      'telefono': '${NumeroTel}',
+      'cliente_nombre': '$nombreCliente'
+    });
+    print('pasando los valores a las tablas');
+    ListapedidoController listapedidoController = ListapedidoController();
+    listapedidoController.insertarListaPedido('lista_pedido',
+        {'id_pedido': '', 'id_producto': '', 'cantidad': '', 'subtotal': ''});
   }
 }

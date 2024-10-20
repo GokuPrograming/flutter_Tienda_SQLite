@@ -4,7 +4,7 @@ import 'package:store_sqlite/models/direccion_model.dart';
 class DireccionController {
    final TiendaDataBase _dataBase = TiendaDataBase();
 
-  Future<int> insertCategoria(String table, Map<String, dynamic> row) async {
+  Future<int> insertDireccion(String table, Map<String, dynamic> row) async {
     final db = await _dataBase.database;
     return await db.insert(table, row);
   }

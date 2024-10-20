@@ -94,20 +94,21 @@ class _MenuappScreenvState extends State<MenuappScreenv> {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.pushNamed(context, '/crearPedido');
+              Navigator.pushNamed(context, '/carrito');
             },
-            icon: Icon(Icons.add),
+            icon: Icon(Icons.shopping_cart),
           ),
         ],
         backgroundColor: const Color.fromARGB(131, 33, 31, 31),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.pushNamed(context, '/productos');
+        },
         child: Icon(
           Icons.add,
         ),
         tooltip: 'Nuevo',
-        
       ),
       body: _pages[_currentIndex],
       bottomNavigationBar: AnimatedBottomNavigation(

@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:store_sqlite/controller/producto_controller.dart';
 import 'package:store_sqlite/models/producto_model.dart';
-import 'package:store_sqlite/screens/NuevoPedido/cardWidget.dart';
+import 'package:store_sqlite/screens/Productos/cardWidget.dart';
 
-class Nuevopedido extends StatefulWidget {
-  const Nuevopedido({super.key});
+class Productos extends StatefulWidget {
+  const Productos({super.key});
 
   @override
-  State<Nuevopedido> createState() => _NuevopedidoState();
+  State<Productos> createState() => _ProductosState();
 }
 
-class _NuevopedidoState extends State<Nuevopedido> {
+class _ProductosState extends State<Productos> {
   late ProductoController productoController = ProductoController();
   void initState() {
     super.initState();

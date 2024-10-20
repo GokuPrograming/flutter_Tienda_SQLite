@@ -5,8 +5,8 @@ import 'package:store_sqlite/models/lista_pedido_model.dart';
 import 'package:store_sqlite/models/status_model.dart';
 
 class Dropdownbuttonlistwidget extends StatefulWidget {
-  const Dropdownbuttonlistwidget(this.id_status, {super.key});
-  final int? id_status;
+  const Dropdownbuttonlistwidget( {super.key});
+  
 // Constructor modificado
 
   @override
@@ -48,7 +48,7 @@ class _DropdownbuttonlistwidgetState extends State<Dropdownbuttonlistwidget> {
             child: DropdownButton2<String>(
               isExpanded: true,
               hint: Text(
-                '${widget.id_status}',
+                '',
                 style: TextStyle(
                   fontSize: 14,
                   color: Theme.of(context).hintColor,

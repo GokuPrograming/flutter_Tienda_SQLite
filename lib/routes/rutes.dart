@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:store_sqlite/screens/NuevoPedido.dart';
+import 'package:store_sqlite/screens/Productos.dart';
 import 'package:store_sqlite/screens/carrito_screens.dart';
 import 'package:store_sqlite/screens/informacionPedido.dart';
 import 'package:store_sqlite/screens/login/login_ScreenH.dart';
@@ -10,7 +10,7 @@ class AppRoutes {
   static const menuScreen = '/MenuScreen';
   static const loginScreen = '/loginScreen';
   static const informacionPedido = '/informacionPedido';
-  static const nuevoPedido = '/crearPedido';
+  static const productos = '/productos';
   static const carrito = '/carrito';
   static final routes = <String, WidgetBuilder>{
     //recibe una cadena , y un witget
@@ -18,7 +18,7 @@ class AppRoutes {
         pantallaVerticalMobile: LoginScreenVertical(),
         pantallaHorizontalMobile: LoginScreenHorizontal()),
     informacionPedido: (context) => Informacionpedido(),
-    nuevoPedido: (context) => Nuevopedido(),
+    productos: (context) => Productos(),
     carrito: (contexto) => CarritoScreens(),
   };
 }

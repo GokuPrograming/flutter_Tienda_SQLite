@@ -17,9 +17,10 @@ class CarritoController {
     Future<List<Map<String, dynamic>>?> mostrarTodosLosCarritos() async {
     var con = await _dataBase.database;
     var result = await con.rawQuery('''
-    SELECT *
+    SELECT *,sum(cantidad)  as cantidad, sum(subtotal) as subtotal
     FROM carrito c
     inner join producto p on c.id_producto = p.id_producto
+    group by p.id_producto
   '''); // Aquí se pasa el parámetro
     print(result);
     return result;
