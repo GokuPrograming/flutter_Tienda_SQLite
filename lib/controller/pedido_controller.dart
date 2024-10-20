@@ -9,10 +9,34 @@ class PedidoController {
     return await db.insert(table, row);
   }
 
-  Future<List<PedidoModel>?> mostrarTodosLosPedidos() async {
+  Future<List<PedidoModel>?> mostrarTodosLosPedidos(int opc) async {
     var con = await _dataBase.database;
-    var result = await con.query('pedido');
-    return result.map((pedido) => PedidoModel.fromMap(pedido)).toList();
+
+    // Definimos el tipo de result para mayor claridad.
+    List<Map<String, dynamic>> result;
+
+    switch (opc) {
+      case 0:
+        result =
+            await con.query('pedido', where: 'id_status = ?', whereArgs: [2]);
+        break;
+      case 1:
+        result = await con.query('pedido');
+        break;
+      case 2:
+        result =
+            await con.query('pedido', where: 'id_status = ?', whereArgs: [1]);
+        break;
+      default:
+        return []; // Si opc no coincide con ninguno, retornamos una lista vacía.
+    }
+
+    // Verificamos si result está vacío o nulo antes de mapear.
+    if (result.isNotEmpty) {
+      return result.map((pedido) => PedidoModel.fromMap(pedido)).toList();
+    } else {
+      return [];
+    }
   }
 
   Future<int> actualizarPedido(String table, Map<String, dynamic> row) async {

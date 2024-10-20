@@ -133,7 +133,7 @@ VALUES
         db.execute(query11);
 
         String query12 = '''
-        Insert into status(status)values('completado'),('En Proceso'),('cancelado')
+        Insert into status(status)values('completado'),('pendiente'),('cancelado')
         ''';
         db.execute(query12);
 

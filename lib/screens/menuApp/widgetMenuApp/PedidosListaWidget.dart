@@ -3,7 +3,9 @@ import 'package:store_sqlite/controller/pedido_controller.dart';
 import 'package:store_sqlite/models/pedido_model.dart';
 
 class Pedidoslistawidget extends StatefulWidget {
-  const Pedidoslistawidget({super.key});
+  final int opc;
+
+  const Pedidoslistawidget({super.key, required this.opc});
 
   @override
   State<Pedidoslistawidget> createState() => _PedidoslistawidgetState();
@@ -61,7 +63,7 @@ class _PedidoslistawidgetState extends State<Pedidoslistawidget> {
     var LargoContenedorList = MediaQuery.of(context).size.width * .1;
     return Scaffold(
       body: FutureBuilder(
-        future: pedidoController.mostrarTodosLosPedidos(),
+        future: pedidoController.mostrarTodosLosPedidos(widget.opc),
         builder: (context, AsyncSnapshot<List<PedidoModel>?> snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(
@@ -132,5 +134,4 @@ class _PedidoslistawidgetState extends State<Pedidoslistawidget> {
       ),
     );
   }
-
 }

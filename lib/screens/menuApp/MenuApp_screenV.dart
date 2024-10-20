@@ -19,9 +19,19 @@ class _MenuappScreenvState extends State<MenuappScreenv> {
   int _currentIndex = 0;
 
   final List<Widget> _pages = [
-    Center(child: Pedidoslistawidget()),
+    Center(
+        child: Pedidoslistawidget(
+      opc: 0,
+    )),
+    Center(
+        child: Pedidoslistawidget(
+      opc: 1,
+    )),
     Center(child: TableBasicsExample()),
-    Center(child: Text('Profile Page')),
+    Center(
+        child: Pedidoslistawidget(
+      opc: 2,
+    )),
   ];
 
   @override
@@ -116,9 +126,10 @@ class _MenuappScreenvState extends State<MenuappScreenv> {
         indicatorSpaceBotton: 25,
         selectedColor: Colors.black,
         icons: [
-          Icons.motorcycle,
+          Icons.pending_outlined,
+          Icons.schedule,
           Icons.calendar_month,
-          Icons.dashboard,
+          Icons.task_alt
         ],
         currentIndex: _currentIndex,
         onTapChange: (index) {
