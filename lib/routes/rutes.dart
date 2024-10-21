@@ -7,6 +7,8 @@ import 'package:store_sqlite/screens/informacionPedido.dart';
 import 'package:store_sqlite/screens/login/login_ScreenH.dart';
 import 'package:store_sqlite/screens/login/login_screenV.dart';
 import 'package:store_sqlite/screens/loginResponsiveScreen.dart';
+import 'package:store_sqlite/screens/municipios_screen.dart';
+import 'package:store_sqlite/screens/productos_screen.dart';
 
 class AppRoutes {
   static const menuScreen = '/MenuScreen';
@@ -16,6 +18,8 @@ class AppRoutes {
   static const carrito = '/carrito';
   static const categoria_screen = '/categoria';
   static const crudCategoria = '/crud_categoria';
+  static const municipioScreen = '/municipios';
+  static const productosScreen = '/listaProductos';
   static final routes = <String, WidgetBuilder>{
     //recibe una cadena , y un witget
     loginScreen: (context) => const loginResponsiveScreen(
@@ -25,6 +29,8 @@ class AppRoutes {
     productos: (context) => Productos(),
     carrito: (context) => CarritoScreens(),
     categoria_screen: (context) => CategoriaScreen(),
-    crudCategoria: (context) => CategoriaCrudScreen()
+    crudCategoria: (context) => CategoriaCrudScreen(),
+    municipioScreen: (context) => MunicipiosScreen(),
+    productosScreen: (context) => ProductosScreen(),
   };
 }

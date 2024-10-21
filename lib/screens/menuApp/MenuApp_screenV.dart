@@ -52,7 +52,9 @@ class _MenuappScreenvState extends State<MenuappScreenv> {
                   ),
                 ),
                 ListTile(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(context, '/listaProductos');
+                  },
                   leading: Icon(Icons.food_bank),
                   title: Text('Productos'),
                 ),
@@ -64,7 +66,9 @@ class _MenuappScreenvState extends State<MenuappScreenv> {
                   title: Text('Categorias'),
                 ),
                 ListTile(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(context, '/municipios');
+                  },
                   leading: Icon(Icons.location_city),
                   title: Text('Municipios'),
                 ),
