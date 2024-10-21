@@ -57,7 +57,9 @@ class _MenuappScreenvState extends State<MenuappScreenv> {
                   title: Text('Productos'),
                 ),
                 ListTile(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(context, '/categoria');
+                  },
                   leading: Icon(Icons.category),
                   title: Text('Categorias'),
                 ),
