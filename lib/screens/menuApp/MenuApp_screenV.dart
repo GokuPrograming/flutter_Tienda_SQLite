@@ -73,7 +73,9 @@ class _MenuappScreenvState extends State<MenuappScreenv> {
                   title: Text('Municipios'),
                 ),
                 ListTile(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(context, '/comunidades');
+                  },
                   leading: Icon(Icons.gps_fixed),
                   title: Text('Comunidades'),
                 ),
