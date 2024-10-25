@@ -6,7 +6,8 @@ class DropdownComunidadWidget extends StatefulWidget {
   //recibe el modelo de municipio
   final Function(MunicipioModel?) onChanged;
   final int? id_comunidad;
-  const DropdownComunidadWidget(this.id_comunidad,
+  const DropdownComunidadWidget(
+    this.id_comunidad,
       {super.key, required this.onChanged});
 
   @override

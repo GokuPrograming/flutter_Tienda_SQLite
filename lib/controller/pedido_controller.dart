@@ -53,6 +53,23 @@ class PedidoController {
     return result;
   }
 
+  Future<List<Map<String, dynamic>>?> mostrarPedidoDatosDelPedidoPorFecha(
+      String fecha) async {
+    var con = await _dataBase.database;
+    var result = await con.rawQuery('''
+Select * from direccion d 
+inner join pedido p on d.id_direccion=p.id_direccion
+inner join comunidad c on d.id_comunidad=c.id_comunidad
+inner join municipio m on c.id_municipio=m.id_municipio
+where p.fecha_entrega=?
+group by p.id_pedido
+limit 1
+  ''', [fecha]); // Aquí se pasa el parámetro
+    print(fecha);
+    print(result);
+    return result;
+  }
+
   Future<List<Map<String, dynamic>>?> mostrarPedidoDatosCliente(
       int? id_pedido) async {
     var con = await _dataBase.database;
