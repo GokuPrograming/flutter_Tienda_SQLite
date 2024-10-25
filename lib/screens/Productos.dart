@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:store_sqlite/controller/producto_controller.dart';
 import 'package:store_sqlite/models/producto_model.dart';
 import 'package:store_sqlite/screens/Productos/cardWidget.dart';
+import 'package:store_sqlite/screens/Productos/cardWidgetToCarrito.dart';
 
 class Productos extends StatefulWidget {
   const Productos({super.key});
@@ -43,13 +44,16 @@ class _ProductosState extends State<Productos> {
 
           return GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: .4,
-                crossAxisSpacing: .1,
-                mainAxisSpacing: 0),
+              crossAxisCount: 2,
+              childAspectRatio: 0.5,
+              crossAxisSpacing:
+                  10, // usualmente se utilizan valores mayores que 0
+              mainAxisSpacing:
+                  10, // usualmente se utilizan valores mayores que 0
+            ),
             itemCount: snapshot.data!.length,
             itemBuilder: (BuildContext context, int index) {
-              return Cardwidget(snapshot.data![index]);
+              return Cardwidgettocarrito(snapshot.data![index]);
             },
           );
         },
