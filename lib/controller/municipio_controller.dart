@@ -38,7 +38,6 @@ class MunicipioController {
 FROM municipio m
 JOIN comunidad c ON m.id_municipio = c.id_municipio
 WHERE c.id_comunidad = ?
- 
   ''', [id_comunidad]);
     return result;
   }
