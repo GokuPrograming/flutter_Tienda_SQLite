@@ -39,7 +39,7 @@ class _InformacionpedidoState extends State<Informacionpedido> {
         body: Column(
           children: [
             InformacionClientewidget(id),
-            Informacionpedidowidget(id),
+            Informacionpedidowidget(id),  
           ],
         ),
         floatingActionButton: Floatingbuttonwidget(id));

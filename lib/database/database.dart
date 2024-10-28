@@ -2,7 +2,9 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:store_sqlite/models/carrito_model.dart';
 import 'package:store_sqlite/models/categoria_model.dart';
+import 'package:store_sqlite/models/producto_model.dart';
 
 class TiendaDataBase {
   static final NAMEDB = 'PizzeriaDB';
@@ -58,12 +60,14 @@ class TiendaDataBase {
           id_status INTEGER PRIMARY KEY,
           status VARCHAR(50)
         );''';
+
         db.execute(query4);
         String query5 = '''
          CREATE TABLE municipio(
           id_municipio INTEGER PRIMARY KEY,
           municipio varchar(150)
         );''';
+
         db.execute(query5);
         String query6 = '''
          CREATE TABLE comunidad(
@@ -73,6 +77,7 @@ class TiendaDataBase {
           CONSTRAINT comunidad_municipio_fk FOREIGN KEY(id_municipio) REFERENCES municipio(id_municipio)
         );''';
         db.execute(query6);
+
         String query7 = '''
          CREATE TABLE direccion(
           id_direccion INTEGER PRIMARY KEY,
@@ -86,6 +91,7 @@ class TiendaDataBase {
           CONSTRAINT direccion_comunidad_fk FOREIGN KEY(id_comunidad) REFERENCES comunidad(id_comunidad)
         );''';
         db.execute(query7);
+
         String query8 = '''
          CREATE TABLE pedido(
           id_pedido INTEGER PRIMARY KEY,
@@ -172,10 +178,70 @@ VALUES
     );
   } // initdatabase
 
-  // Future<int> INSERT(String table, Map<String, dynamic> row) async {
-  //   var con = await database;
-  //   return await con.insert(table, row);
-  // }
+  Future<int> CREATE_PEDIDO(
+      Map<String, dynamic> pedido, Map<String, dynamic> direccion) async {
+    // Obtener conexión a la base de datos
+    var con = await database;
+
+    // Inserta en la tabla direccion y obtiene el id generado
+    int id_direccion = await con.insert('direccion', direccion);
+
+    // Asigna id_direccion al mapa pedido
+    pedido['id_direccion'] = id_direccion;
+
+    // Inserta el pedido con el id_direccion agregado y obtiene el id del pedido
+    int id_pedido = await con.insert('pedido', pedido);
+
+    // Recupera los productos del carrito
+    List<CarritoModel> carritoProducts = await SELECT_CARRITO();
+
+    // Imprimir los productos del carrito para verificar
+    print('Productos en el carrito:');
+    for (var producto in carritoProducts) {
+      print('ID Producto: ${producto.id_producto}, '
+          'Cantidad: ${producto.cantidad}, '
+          'Subtotal: ${producto.subtotal}');
+    }
+
+    // Inserta cada producto del carrito en la tabla lista_pedido
+    for (var producto in carritoProducts) {
+      // Asegurarse de que cantidad y subtotal no sean nulos
+      int cantidad =
+          producto.cantidad ?? 0; // Proporciona 0 si cantidad es nulo
+      double subtotal = (producto.subtotal ?? 0.0)
+          .toDouble(); // Asegúrate de que subtotal sea un double
+
+      // Verificar que la cantidad no sea cero antes de calcular el precio unitario
+      double precio = cantidad > 0 ? subtotal / cantidad : 0.0;
+
+      Map<String, dynamic> listaPedido = {
+        'id_producto': producto.id_producto,
+        'id_pedido': id_pedido,
+        'cantidad': cantidad,
+        'precio': precio,
+        'subtotal': subtotal,
+      };
+
+      await con.insert('lista_pedido', listaPedido);
+    }
+
+    // Limpia el carrito después de crear el pedido, si es necesario
+    await con.delete('carrito');
+
+    return id_pedido;
+  }
+
+  Future<List<CarritoModel>> SELECT_CARRITO() async {
+    var con = await database;
+    var result = await con.query('carrito');
+
+    // Mapea cada resultado al modelo CarritoModel, asegurando que no sea nulo
+    return result.map((carrito) => CarritoModel.fromMap(carrito)).toList() ??
+        [];
+  }
+}
+
+
 
   // Future<int> UPDATE(String table, Map<String, dynamic> row) async {
   //   var con = await database;
@@ -187,10 +253,3 @@ VALUES
   //   var con = await database;
   //   return await con.delete(table, where: 'idMovie = ?', whereArgs: [idMovie]);
   // }
-
-  // Future<List<CategoriaModel>?> SELECT() async {
-  //   var con = await database;
-  //   var result = await con.query('categoria');
-  //   return result.map((categoria)=>CategoriaModel.fromMap(categoria)).toList();
-  // }
-}

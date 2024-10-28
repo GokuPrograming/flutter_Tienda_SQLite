@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:store_sqlite/controller/carrito_controller.dart';
 import 'package:store_sqlite/controller/direccion_controller.dart';
 import 'package:store_sqlite/controller/listaPedido_controller.dart';
+import 'package:store_sqlite/database/database.dart';
 import 'package:store_sqlite/models/lista_pedido_model.dart';
+import 'package:store_sqlite/models/toast_notification.dart';
 import 'package:store_sqlite/screens/carrito_widgets/dropDown_Municipio_Widget.dart';
 
 class CarritoScreens extends StatefulWidget {
@@ -21,6 +23,17 @@ class _CarritoScreensState extends State<CarritoScreens> {
   final conColonia = TextEditingController();
   final conCalle = TextEditingController();
   final conNoExterior = TextEditingController();
+  final conNoInterior = TextEditingController();
+  final conFechaEntrega = TextEditingController();
+  final toast = ToastNotification();
+
+  late TiendaDataBase db;
+
+  @override
+  void initState() {
+    super.initState();
+    db = TiendaDataBase();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,11 +100,45 @@ class _CarritoScreensState extends State<CarritoScreens> {
                         prefixIcon: Icon(Icons.numbers),
                       ),
                     ),
+                    TextFormField(
+                      keyboardType: TextInputType.number,
+                      controller: conNoInterior,
+                      decoration: const InputDecoration(
+                        label: Text('Número Interior'),
+                        prefixIcon: Icon(Icons.numbers),
+                      ),
+                    ),
                     const Row(
                       children: [
-                        Text('Municipio'),
+                        Text('Comunidad'),
                         DropdownMunicipioWidget(),
                       ],
+                    ),
+                    TextFormField(
+                      keyboardType: TextInputType
+                          .none, // Desactiva el teclado para mostrar solo el calendario
+                      controller: conFechaEntrega,
+                      decoration: const InputDecoration(
+                        label: Text('Fecha entrega'),
+                        prefixIcon: Icon(Icons.calendar_month),
+                      ),
+                      onTap: () async {
+                        FocusScope.of(context).requestFocus(
+                            FocusNode()); // Evita que el teclado se muestre
+                        DateTime? pickedDate = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2000), // Fecha mínima permitida
+                          lastDate: DateTime(2101), // Fecha máxima permitida
+                        );
+
+                        if (pickedDate != null) {
+                          // Formatea la fecha seleccionada y la asigna al controlador
+                          String formattedDate =
+                              "${pickedDate.year}-${pickedDate.month}-${pickedDate.day}";
+                          conFechaEntrega.text = formattedDate;
+                        }
+                      },
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -106,34 +153,64 @@ class _CarritoScreensState extends State<CarritoScreens> {
                         Padding(
                           padding: const EdgeInsets.all(15.0),
                           child: ElevatedButton(
-                            onPressed: () {
-                              // Acceder a los datos al presionar "Completado"
+                            onPressed: () async {
                               String nombreCliente = conNombreCliente.text;
                               String telefono = conTelefono.text;
                               String colonia = conColonia.text;
                               String calle = conCalle.text;
                               String noExterior = conNoExterior.text;
+                              String noInterior = conNoInterior.text;
+                              String fecha = conFechaEntrega.text;
 
-                              // Aquí accedes a los valores de los contadores y haces lo necesario
-                              print('Nombre del Cliente: $nombreCliente');
-                              print('Teléfono: $telefono');
-                              print('Colonia: $colonia');
-                              print('Calle: $calle');
-                              print('Número Exterior: $noExterior');
-                              print(
-                                  'Valores de los contadores: $_counterValues');
+// Verifica que todos los campos estén completos
+                              if (nombreCliente.isNotEmpty &&
+                                  telefono.isNotEmpty &&
+                                  colonia.isNotEmpty &&
+                                  calle.isNotEmpty) {
+                                // Crear el mapa para la tabla direccion
+                                Map<String, dynamic> direccion = {
+                                  'id_comunidad':
+                                      1, // Puedes ajustar este valor
+                                  'calle': calle,
+                                  'colonia': colonia,
+                                  'no_exterior': int.parse(
+                                      noExterior), // Convierte a entero si es necesario
+                                  'no_interior': noInterior.isNotEmpty
+                                      ? int.parse(noInterior)
+                                      : null,
+                                  'num_telefono': telefono,
+                                  'nombre_cliente': nombreCliente,
+                                };
 
-                              // Puedes procesar los datos aquí, por ejemplo, guardarlos en tu base de datos
-                              // usando carritoController.
+                                // Crear el mapa para la tabla pedido
+                                Map<String, dynamic> pedido = {
+                                  'id_status':
+                                      2, // Estado inicial, ajusta si es necesario
+                                  'id_direccion':
+                                      null, // Este se asignará luego de insertar en 'direccion'
+                                  'fecha_entrega': fecha
+                                      .toString(), // O asigna la fecha específica
+                                };
 
-                              // Cerrar el modal
-                              // Aquí podrías enviar los datos a tu base de datos usando carritoController
-
-                              // ingresarDireccion(nombreCliente, telefono,
-                              //     colonia, calle, noExterior);
-                              // Cerrar el modal
-
-                              Navigator.pop(context);
+                                // Llama a la función para crear el pedido y la dirección
+                                int res =
+                                    await db.CREATE_PEDIDO(pedido, direccion);
+                                print('RES CREATE: ${res}');
+                                if (res > 0)
+                                  setState(() {
+                                    Navigator.pop(context);
+                                    toast.showToast(context, 'Pedido',
+                                        'Se registro con exito!', 'success');
+                                  });
+                              } else {
+                                // Mostrar un mensaje Toast para llenar todos los campos
+                                print("Por favor llena todos los campos.");
+                                toast.showToast(
+                                    context,
+                                    'Campos incompletos',
+                                    'Por favor llenar todos los campos',
+                                    'error');
+                              }
                             },
                             child: Row(
                               children: const [
@@ -246,13 +323,10 @@ class _CarritoScreensState extends State<CarritoScreens> {
   void ingresarDireccion(String nombreCliente, String NumeroTel, String Colonia,
       String Calle, String NumExterior) {
     print('se ingresaron los datos');
-   
-   try {
-     
-   } catch (e) {
-     
-   }
+
+    try {} catch (e) {}
     DireccionController direccionController = DireccionController();
+
     direccionController.insertDireccion('direccion', {
       'Id_comunidad': 1,
       'calle': '${Calle}',
