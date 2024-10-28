@@ -42,5 +42,18 @@ class ComunidadController {
     return result;
   }
 
+  Future<List<ComunidadModel>?> mostrarComunidadByIdMunicipio(
+      int idMunicipio) async {
+    var con = await _dataBase.database;
+    var result = await con.rawQuery('''
+    SELECT * FROM comunidad c
+    JOIN municipio m ON c.id_municipio = m.id_municipio
+    WHERE c.id_municipio = ?
+  ''', [idMunicipio]);
 
+    if (result.isNotEmpty) {
+      return result.map((map) => ComunidadModel.fromMap(map)).toList();
+    }
+    return null;
+  }
 }
