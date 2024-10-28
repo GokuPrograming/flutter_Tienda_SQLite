@@ -62,22 +62,30 @@ class _MenuappScreenvState extends State<MenuappScreenv> {
                   ),
                 ),
                 ListTile(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(context, '/listaProductos');
+                  },
                   leading: Icon(Icons.food_bank),
                   title: Text('Productos'),
                 ),
                 ListTile(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(context, '/categoria');
+                  },
                   leading: Icon(Icons.category),
                   title: Text('Categorias'),
                 ),
                 ListTile(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(context, '/municipios');
+                  },
                   leading: Icon(Icons.location_city),
                   title: Text('Municipios'),
                 ),
                 ListTile(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(context, '/comunidades');
+                  },
                   leading: Icon(Icons.gps_fixed),
                   title: Text('Comunidades'),
                 ),
