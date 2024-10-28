@@ -1,3 +1,4 @@
+import 'package:cool_alert/cool_alert.dart';
 import 'package:counter_button/counter_button.dart';
 import 'package:flutter/material.dart';
 import 'package:store_sqlite/config/globalValues.dart';
@@ -340,27 +341,75 @@ class _CarritoScreensState extends State<CarritoScreens> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment
+                                      .spaceBetween, // Espacia elementos
                                   children: [
-                                    Text(
-                                      '${carrito['producto']}\n cantidad=${carrito['cantidad']}\n subtotal=${carrito['subtotal']}',
-                                      textAlign: TextAlign.left,
-                                      style: const TextStyle(
-                                        fontSize: 16,
+                                    Expanded(
+                                      // Asegura que el texto ocupe el espacio restante
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            '${carrito['producto']}',
+                                            style: const TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight
+                                                  .bold, // Resalta el nombre del producto
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                              height:
+                                                  4), // Espacio entre el nombre del producto y la información
+                                          Text(
+                                            'Cantidad: ${carrito['cantidad']}',
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              color: Colors
+                                                  .grey, // Color gris para menor jerarquía
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                              height: 2), // Espacio adicional
+                                          Text(
+                                            'Subtotal: \$${carrito['subtotal'].toStringAsFixed(2)}', // Formato de precio
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              color: Colors
+                                                  .green, // Verde para el subtotal
+                                              fontWeight: FontWeight
+                                                  .w600, // Fuente más fuerte
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                    CounterButton(
-                                      loading: false,
-                                      onChange: (int val) {
-                                        setState(() {
-                                          _counterValues[index] = val;
-                                        });
+                                    IconButton(
+                                      onPressed: () async {
+                                        int res = await carritoController
+                                            .eliminarCarrito('carrito',
+                                                carrito['id_producto']);
+                                        if (res > 0) {
+                                          setState(() {
+                                            Globalvalues
+                                                    .refrescarCarrito.value =
+                                                !Globalvalues
+                                                    .refrescarCarrito.value;
+
+                                            // Navigator.pop(context);
+                                            toast.showToast(
+                                                context,
+                                                'Borrado',
+                                                'Se borró con exito!',
+                                                'success');
+                                          });
+                                        }
                                       },
-                                      count: _counterValues[index],
-                                      countColor: Colors.purple,
-                                      buttonColor: Colors.purpleAccent,
-                                      progressColor: Colors.purpleAccent,
+
+                                      icon: const Icon(Icons.delete,
+                                          color: Colors
+                                              .red), // Ícono de eliminar en rojo
                                     ),
                                   ],
                                 ),

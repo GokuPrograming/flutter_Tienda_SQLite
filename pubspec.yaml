@@ -30,6 +30,7 @@ environment:
 dependencies:
   animated_botton_navigation: ^0.0.7
   animated_floating_buttons: ^0.0.2
+  cool_alert: ^2.0.1
   counter_button: ^1.0.1
   cupertino_icons: ^1.0.8
   dropdown_button2: ^2.3.9
@@ -42,8 +43,8 @@ dependencies:
   path_provider: ^2.1.4
   sqflite: ^2.3.3+1
   table_calendar: ^3.1.2
-  wolt_modal_sheet: ^0.9.3
   toastification: ^2.3.0
+  wolt_modal_sheet: ^0.9.3
 
 dev_dependencies:
   flutter_lints: ^4.0.0
