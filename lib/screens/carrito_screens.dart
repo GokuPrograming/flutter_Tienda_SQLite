@@ -22,6 +22,7 @@ class CarritoScreens extends StatefulWidget {
 }
 
 class _CarritoScreensState extends State<CarritoScreens> {
+  // static ValueNotifier<bool> refrescarCarrito = ValueNotifier(true);
   CarritoController carritoController = CarritoController();
   List<int> _counterValues = [];
   int? id_municipio;
@@ -245,6 +246,10 @@ class _CarritoScreensState extends State<CarritoScreens> {
                                       print('RES CREATE: ${res}');
                                       if (res > 0)
                                         setState(() {
+                                          Globalvalues.refrescarCarrito.value =
+                                              !Globalvalues
+                                                  .refrescarCarrito.value;
+
                                           Navigator.pop(context);
                                           toast.showToast(
                                               context,
@@ -293,82 +298,87 @@ class _CarritoScreensState extends State<CarritoScreens> {
           );
         },
       ),
-      body: FutureBuilder<List<Map<String, dynamic>>?>(
-        future: carritoController.mostrarTodosLosCarritos(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text(snapshot.error.toString()),
-            );
-          } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-            if (_counterValues.isEmpty) {
-              _counterValues = List<int>.filled(snapshot.data!.length, 0);
-            }
-            List<Map<String, dynamic>> carritos = snapshot.data!;
-            return ListView.builder(
-              itemCount: carritos.length,
-              itemBuilder: (context, index) {
-                var carrito = carritos[index];
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: InkWell(
-                    onTap: () {},
-                    child: Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: const Color.fromARGB(40, 75, 39, 39),
-                        border: const Border(
-                          left: BorderSide(
-                            width: 4,
+      body: ValueListenableBuilder(
+        valueListenable: Globalvalues.refrescarCarrito,
+        builder: (BuildContext context, dynamic value, Widget? child) {
+          return FutureBuilder<List<Map<String, dynamic>>?>(
+            future: carritoController.mostrarTodosLosCarritos(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (snapshot.hasError) {
+                return Center(
+                  child: Text(snapshot.error.toString()),
+                );
+              } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                if (_counterValues.isEmpty) {
+                  _counterValues = List<int>.filled(snapshot.data!.length, 0);
+                }
+                List<Map<String, dynamic>> carritos = snapshot.data!;
+                return ListView.builder(
+                  itemCount: carritos.length,
+                  itemBuilder: (context, index) {
+                    var carrito = carritos[index];
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: InkWell(
+                        onTap: () {},
+                        child: Container(
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: const Color.fromARGB(40, 75, 39, 39),
+                            border: const Border(
+                              left: BorderSide(
+                                width: 4,
+                              ),
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '${carrito['producto']}\n cantidad=${carrito['cantidad']}\n subtotal=${carrito['subtotal']}',
+                                      textAlign: TextAlign.left,
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                    CounterButton(
+                                      loading: false,
+                                      onChange: (int val) {
+                                        setState(() {
+                                          _counterValues[index] = val;
+                                        });
+                                      },
+                                      count: _counterValues[index],
+                                      countColor: Colors.purple,
+                                      buttonColor: Colors.purpleAccent,
+                                      progressColor: Colors.purpleAccent,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '${carrito['producto']}\n cantidad=${carrito['cantidad']}\n subtotal=${carrito['subtotal']}',
-                                  textAlign: TextAlign.left,
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                CounterButton(
-                                  loading: false,
-                                  onChange: (int val) {
-                                    setState(() {
-                                      _counterValues[index] = val;
-                                    });
-                                  },
-                                  count: _counterValues[index],
-                                  countColor: Colors.purple,
-                                  buttonColor: Colors.purpleAccent,
-                                  progressColor: Colors.purpleAccent,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                    );
+                  },
                 );
-              },
-            );
-          } else {
-            return const Center(
-              child: Text('No hay pedidos disponibles'),
-            );
-          }
+              } else {
+                return const Center(
+                  child: Text('No hay pedidos disponibles'),
+                );
+              }
+            },
+          );
         },
       ),
     );
@@ -380,7 +390,6 @@ class _CarritoScreensState extends State<CarritoScreens> {
 
     try {} catch (e) {}
     DireccionController direccionController = DireccionController();
-
     direccionController.insertDireccion('direccion', {
       'Id_comunidad': 1,
       'calle': '${Calle}',

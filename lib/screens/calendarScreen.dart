@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:store_sqlite/config/globalValues.dart';
 import 'package:store_sqlite/controller/pedido_controller.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
@@ -23,6 +24,26 @@ class _TableBasicsExampleState extends State<TableBasicsExample> {
     // mostrarPedidoDatosCliente();
     main(); // Cargar eventos al inicio
   }
+Future<List<Widget>> _buildEventMarkers(DateTime date, List events) async {
+  List<Widget> markers = [];
+
+  for (var event in events) {
+    Color color = await SelectColorPoints(date); // Obtiene el color de cada evento
+    markers.add(
+      Container(
+        margin: const EdgeInsets.symmetric(horizontal: 1.5),
+        width: 8,
+        height: 8,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: color,
+        ),
+      ),
+    );
+  }
+
+  return markers;
+}
 
   Future<List<Map<String, dynamic>>?> recuperandoDatos() async {
     List<Map<String, dynamic>>? datos =
@@ -103,190 +124,187 @@ class _TableBasicsExampleState extends State<TableBasicsExample> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text('Eventos')),
-        body: Column(children: [
-          TableCalendar(
-            firstDay: DateTime.utc(2020, 1, 1),
-            lastDay: DateTime.utc(2030, 12, 31),
-            focusedDay: _focusedDay,
-            calendarFormat: _calendarFormat,
-            selectedDayPredicate: (day) {
-              return isSameDay(_selectedDay, day);
-            },
-            onDaySelected: (selectedDay, focusedDay) {
-              if (!isSameDay(_selectedDay, selectedDay)) {
-                setState(() {
-                  _selectedDay = selectedDay;
-                  _focusedDay = focusedDay;
-                  _selectedDate = selectedDay;
-                });
+      appBar: AppBar(title: Text('Eventos')),
+      body: ValueListenableBuilder(
+        valueListenable: Globalvalues.refrescarCalendario,
+        builder: (BuildContext context, dynamic value, Widget? child) {
+          return Column(children: [
+            TableCalendar(
+              firstDay: DateTime.utc(2020, 1, 1),
+              lastDay: DateTime.utc(2030, 12, 31),
+              focusedDay: _focusedDay,
+              calendarFormat: _calendarFormat,
+              selectedDayPredicate: (day) {
+                return isSameDay(_selectedDay, day);
+              },
+              onDaySelected: (selectedDay, focusedDay) {
+                if (!isSameDay(_selectedDay, selectedDay)) {
+                  setState(() {
+                    _selectedDay = selectedDay;
+                    _focusedDay = focusedDay;
+                    _selectedDate = selectedDay;
+                  });
 
-                // Recopilamos los eventos de la fecha seleccionada
-                List eventosDelDia = _listOfDayEvents(selectedDay);
+                  // Recopilamos los eventos de la fecha seleccionada
+                  List eventosDelDia = _listOfDayEvents(selectedDay);
 
-                // Mostramos el ModalBottomSheet con los eventos del día
-                showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  builder: (context) => SafeArea(
-                    child: Container(
-                      height: MediaQuery.of(context).size.height * .9,
-                      width: MediaQuery.of(context).size.width,
-                      padding: EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Fecha seleccionada: ${DateFormat('yyyy-MM-dd').format(selectedDay)}',
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(height: 10),
+                  // Mostramos el ModalBottomSheet con los eventos del día
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    builder: (context) => SafeArea(
+                      child: Container(
+                        height: MediaQuery.of(context).size.height * .9,
+                        width: MediaQuery.of(context).size.width,
+                        padding: EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Fecha seleccionada: ${DateFormat('yyyy-MM-dd').format(selectedDay)}',
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(height: 10),
 
-                          // Mostramos los eventos del día
-                          ...eventosDelDia.map((event) {
-                            return ListTile(
-                              title: Text('Título: ${event['eventTitle']}'),
-                              subtitle:
-                                  Text('Descripción: ${event['eventDescp']}'),
-                            );
-                          }).toList(),
+                            // Mostramos los eventos del día
+                            ...eventosDelDia.map((event) {
+                              return ListTile(
+                                title: Text('Título: ${event['eventTitle']}'),
+                                subtitle:
+                                    Text('Descripción: ${event['eventDescp']}'),
+                              );
+                            }).toList(),
 
-                          // Botón para cerrar el modal
-                          SizedBox(height: 10),
-                          ElevatedButton(
-                            onPressed: () => Navigator.pop(context),
-                            child: Text('Cerrar'),
-                          ),
+                            // Botón para cerrar el modal
+                            SizedBox(height: 10),
+                            ElevatedButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: Text('Cerrar'),
+                            ),
 
-                          // Otros detalles adicionales que quieras mostrar
-                          SizedBox(height: 10),
-                          Text(
-                              'Detalles adicionales sobre los eventos del día ${DateFormat('yyyy-MM-dd').format(selectedDay)}'),
-                        ],
+                            // Otros detalles adicionales que quieras mostrar
+                            SizedBox(height: 10),
+                            Text(
+                                'Detalles adicionales sobre los eventos del día ${DateFormat('yyyy-MM-dd').format(selectedDay)}'),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                );
-              }
-            },
-            onFormatChanged: (format) {
-              if (_calendarFormat != format) {
-                setState(() {
-                  _calendarFormat = format;
-                });
-              }
-            },
-            onPageChanged: (focusedDay) {
-              _focusedDay = focusedDay;
-            },
-            eventLoader: _listOfDayEvents,
+                  );
+                }
+              },
+              onFormatChanged: (format) {
+                if (_calendarFormat != format) {
+                  setState(() {
+                    _calendarFormat = format;
+                  });
+                }
+              },
+              onPageChanged: (focusedDay) {
+                _focusedDay = focusedDay;
+              },
+              eventLoader: _listOfDayEvents,
 
-            // Aquí está el `calendarBuilders` con los puntos de colores
-            calendarBuilders: CalendarBuilders(
-              markerBuilder: (context, date, events) {
-                if (events.isNotEmpty) {
-                  return FutureBuilder<Color>(
-                    future: SelectColorPoints(
-                        date), // Obtiene el color según el estado del evento
+              // Aquí está el `calendarBuilders` con los puntos de colores
+calendarBuilders: CalendarBuilders(
+  markerBuilder: (context, date, events) {
+    if (events.isNotEmpty) {
+      return FutureBuilder<List<Widget>>(
+        future: _buildEventMarkers(date, events),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Container(
+              margin: const EdgeInsets.symmetric(horizontal: 1.5),
+              width: 8,
+              height: 8,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.grey,
+              ),
+            );
+          } else if (snapshot.hasError) {
+            return Container(
+              margin: const EdgeInsets.symmetric(horizontal: 1.5),
+              width: 8,
+              height: 8,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.red,
+              ),
+            );
+          } else {
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: snapshot.data!,
+            );
+          }
+        },
+      );
+    }
+    return SizedBox(); // Si no hay eventos, no muestra nada
+  },
+),
+           ),
+            if (_selectedDate != null)
+              ..._listOfDayEvents(_selectedDate!).map((myEvents) =>
+                  FutureBuilder<Color>(
+                    future: SelectColorPoints(_selectedDate),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        // Si está cargando, muestra un marcador gris
-                        return Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 1.5),
-                          width: 8,
-                          height: 8,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.grey,
+                        // Mientras esperamos que el futuro se complete, mostramos un indicador de carga o color predeterminado
+                        return ListTile(
+                          leading: const Icon(
+                            Icons.done,
+                            color:
+                                Colors.grey, // Muestra un color predeterminado
                           ),
+                          title: Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: Text(
+                                'Event Title:   ${myEvents['eventTitle']}'),
+                          ),
+                          subtitle:
+                              Text('Description:   ${myEvents['eventDescp']}'),
                         );
                       } else if (snapshot.hasError) {
-                        // Si hay error, muestra un marcador rojo
-                        return Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 1.5),
-                          width: 8,
-                          height: 8,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.red,
+                        // Si hay algún error, muestra un icono o color diferente
+                        return ListTile(
+                          leading: const Icon(
+                            Icons.error,
+                            color: Colors.red, // Muestra un color de error
                           ),
+                          title: Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: Text(
+                                'Event Title:   ${myEvents['eventTitle']}'),
+                          ),
+                          subtitle:
+                              Text('Description:   ${myEvents['eventDescp']}'),
                         );
                       } else {
-                        // Si todo está bien, muestra el marcador con el color basado en el estado
-                        return Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 1.5),
-                          width: 8,
-                          height: 8,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
+                        // Una vez que el futuro se complete, usamos el color devuelto
+                        return ListTile(
+                          leading: Icon(
+                            Icons.done,
                             color: snapshot
-                                .data, // Usa el color de `SelectColorPoints`
+                                .data, // Usamos el color retornado por SelectColorPoints
                           ),
+                          title: Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: Text(
+                                'Event Title:   ${myEvents['eventTitle']}'),
+                          ),
+                          subtitle:
+                              Text('Description:   ${myEvents['eventDescp']}'),
                         );
                       }
                     },
-                  );
-                }
-                return SizedBox(); // Si no hay eventos, no muestra nada
-              },
-            ),
-          ),
-          if (_selectedDate != null)
-            ..._listOfDayEvents(_selectedDate!).map((myEvents) =>
-                FutureBuilder<Color>(
-                  future: SelectColorPoints(_selectedDate),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      // Mientras esperamos que el futuro se complete, mostramos un indicador de carga o color predeterminado
-                      return ListTile(
-                        leading: const Icon(
-                          Icons.done,
-                          color: Colors.grey, // Muestra un color predeterminado
-                        ),
-                        title: Padding(
-                          padding: const EdgeInsets.only(bottom: 8.0),
-                          child:
-                              Text('Event Title:   ${myEvents['eventTitle']}'),
-                        ),
-                        subtitle:
-                            Text('Description:   ${myEvents['eventDescp']}'),
-                      );
-                    } else if (snapshot.hasError) {
-                      // Si hay algún error, muestra un icono o color diferente
-                      return ListTile(
-                        leading: const Icon(
-                          Icons.error,
-                          color: Colors.red, // Muestra un color de error
-                        ),
-                        title: Padding(
-                          padding: const EdgeInsets.only(bottom: 8.0),
-                          child:
-                              Text('Event Title:   ${myEvents['eventTitle']}'),
-                        ),
-                        subtitle:
-                            Text('Description:   ${myEvents['eventDescp']}'),
-                      );
-                    } else {
-                      // Una vez que el futuro se complete, usamos el color devuelto
-                      return ListTile(
-                        leading: Icon(
-                          Icons.done,
-                          color: snapshot
-                              .data, // Usamos el color retornado por SelectColorPoints
-                        ),
-                        title: Padding(
-                          padding: const EdgeInsets.only(bottom: 8.0),
-                          child:
-                              Text('Event Title:   ${myEvents['eventTitle']}'),
-                        ),
-                        subtitle:
-                            Text('Description:   ${myEvents['eventDescp']}'),
-                      );
-                    }
-                  },
-                ))
-        ]));
+                  ))
+          ]);
+        },
+      ),
+    );
   }
 
   // ignore: non_constant_identifier_names
