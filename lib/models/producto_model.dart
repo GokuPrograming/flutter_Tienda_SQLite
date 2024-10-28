@@ -17,7 +17,7 @@ class ProductoModel {
     return ProductoModel(
         id_producto: producto['id_producto'],
         producto: producto['producto'],
-        precio: (producto['precio'] as num)
+        precio: (producto['precio'] as double)
             .toDouble(), // Conversión segura a double
         descripcion: producto['descripcion'],
         id_categoria: producto['id_categoria'],
