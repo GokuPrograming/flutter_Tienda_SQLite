@@ -99,7 +99,7 @@ class _PedidoslistawidgetState extends State<Pedidoslistawidget> {
                           // Texto del pedido y fecha de entrega
                           Expanded(
                             child: Text(
-                              'No_pedido: ${snapshot.data![index].id_pedido}\nFecha entrega: ${snapshot.data![index].fecha_entrega}',
+                              'Pedido: ${snapshot.data![index].id_pedido}\nFecha entrega: ${snapshot.data![index].fecha_entrega}',
                               textAlign: TextAlign.left,
                               style: const TextStyle(
                                 fontSize: 16,

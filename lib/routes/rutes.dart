@@ -8,6 +8,7 @@ import 'package:store_sqlite/screens/informacionPedido.dart';
 import 'package:store_sqlite/screens/login/login_ScreenH.dart';
 import 'package:store_sqlite/screens/login/login_screenV.dart';
 import 'package:store_sqlite/screens/loginResponsiveScreen.dart';
+import 'package:store_sqlite/screens/menuApp/MenuApp_screenV.dart';
 import 'package:store_sqlite/screens/municipios_screen.dart';
 import 'package:store_sqlite/screens/productos_screen.dart';
 
@@ -35,5 +36,6 @@ class AppRoutes {
     municipioScreen: (context) => MunicipiosScreen(),
     productosScreen: (context) => ProductosScreen(),
     comunidadScreen: (context) => ComunidadScreen(),
+    menuScreen: (context) => MenuappScreenv(),
   };
 }

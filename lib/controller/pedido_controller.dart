@@ -134,4 +134,20 @@ limit 1
 // GROUP BY
 //     pedido.id_pedido;
   }
+
+  Future<bool> CHANGE_STATUS(int id_pedido, int id_status) async {
+    // Obtén la referencia a la base de datos
+    var con = await _dataBase.database;
+
+    // Realiza la actualización
+    int count = await con.update(
+      'pedido', // Nombre de la tabla
+      {'id_status': id_status}, // Campo a actualizar con el nuevo valor
+      where: 'id_pedido = ?', // Condición para encontrar el registro
+      whereArgs: [id_pedido], // Argumento de la condición
+    );
+
+    // Retorna `true` si se actualizó al menos una fila, `false` si no se actualizó nada
+    return count > 0;
+  }
 }
