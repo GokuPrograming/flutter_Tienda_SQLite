@@ -1,9 +1,11 @@
+import 'dart:io';
+// Asegúrate de tener esta dependencia
+import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_product_card/flutter_product_card.dart';
-import 'package:counter_button/counter_button.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:store_sqlite/config/globalValues.dart';
 import 'package:store_sqlite/controller/carrito_controller.dart';
-import 'package:store_sqlite/controller/categoria_controller.dart';
 import 'package:store_sqlite/controller/producto_controller.dart';
 import 'package:store_sqlite/models/categoria_model.dart';
 import 'package:store_sqlite/screens/Productos/dropDown_Categoria_widget.dart';
@@ -17,20 +19,95 @@ class Cardwidget extends StatefulWidget {
 }
 
 class _CardwidgetState extends State<Cardwidget> {
+  ProductoController productoController = ProductoController();
   static ValueNotifier<bool> refrescarWidget = ValueNotifier(true);
+  File? _profilePicFile;
+  late String? _directoryImage;
+  void _directUpdateImage(File? file) async {
+    if (file == null) return;
+
+    setState(() {
+      _profilePicFile = file;
+    });
+  }
 
   CarritoController carritoController = CarritoController();
+
   int _counterValue = 0;
   int newId = 0;
+  String path = 'assets/img/products';
+
+  Future<void> _pickImage(int id_Producto) async {
+    final ImagePicker picker = ImagePicker();
+    final id = id_Producto;
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+      // Obtener la ruta y el nombre de la imagen
+      final String imagePath = image.path;
+      final String imageName = image.name;
+
+      // Imprimir la ruta y el nombre para verificar
+      print('Path: $imagePath, Name: $imageName, el id= $id_Producto');
+      // Guardar la imagen en la carpeta de la aplicación
+      await saveImageInAppDirectory(File(image.path), imageName, id);
+
+      // Actualizar la imagen directamente (si es necesario)
+      // _directUpdateImage(File(image.path));
+    }
+  }
+
+  Future<void> saveImageInAppDirectory(
+      File image, String imageName, int id) async {
+    final directory = await getApplicationDocumentsDirectory();
+
+    _directoryImage = '${directory.path}/assets/img/products';
+
+    final imageDir = Directory(_directoryImage!);
+
+    if (!(await imageDir.exists())) {
+      await imageDir.create(recursive: true);
+    }
+
+    final savedImagePath = '$_directoryImage/$imageName';
+    final savedImage = await image.copy(savedImagePath);
+
+    print('Imagen guardada en: $savedImagePath');
+    print('directoryPath=${_directoryImage}');
+    int res = await productoController.actualizarProducto(
+        'producto', {'img_producto': '$imageName', 'id_producto': '$id'});
+    // Aquí puedes agregar lógica para guardar el path en la base de datos
+
+    print('res de la actualizacion $res');
+    if (res > 0) {
+      Globalvalues.refrescarWidget.value = !Globalvalues.refrescarWidget.value;
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+
+    _directoryImage =
+        '/data/user/0/com.example.store_sqlite/app_flutter/assets/img/products';
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     double precio = widget.producto['precio'];
     return Column(
       children: [
         ProductCard(
-          imageUrl:
-              'https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcQndSK7hvssofrM2uzv75NxVjrkAwH3RwyqWcBesUsmq1ipmkuljRr6x_SRbCKaBXvjTR9CKfAaEFtmUFw-69o52wgVMgk2hp8KDYr4FvKtQ8ZfKewgOW4gDQ&usqp=CAE4',
-          categoryName: '${widget.producto['id_producto']}',
+          onFavoritePressed: () {
+            int id_producto = widget.producto['id_producto'];
+            _pickImage(
+                id_producto); // Llama a la función para seleccionar una imagen
+          },
+          imageUrl: widget.producto['img_producto'] != null
+              ? '${_directoryImage}/${widget.producto['img_producto']}'
+              : 'assets/img/logo_pizza.jfif',
+          categoryName: '${widget.producto['categoria']}',
           productName: '${widget.producto['producto']}',
           price: precio,
           currency: '\$',

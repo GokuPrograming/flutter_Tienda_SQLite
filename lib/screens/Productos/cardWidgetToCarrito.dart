@@ -14,17 +14,26 @@ class Cardwidgettocarrito extends StatefulWidget {
 class _CardwidgetState extends State<Cardwidgettocarrito> {
   CarritoController carritoController = CarritoController();
   int _counterValue = 0;
+  final String _directoryImage =
+      '/data/user/0/com.example.store_sqlite/app_flutter/assets/img/products';
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    String path = 'assets/img/products';
+
     double precio = widget.producto['precio'];
 
     double subtotal = 0;
     return Column(
       children: [
         ProductCard(
-          imageUrl:
-              'https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcQndSK7hvssofrM2uzv75NxVjrkAwH3RwyqWcBesUsmq1ipmkuljRr6x_SRbCKaBXvjTR9CKfAaEFtmUFw-69o52wgVMgk2hp8KDYr4FvKtQ8ZfKewgOW4gDQ&usqp=CAE4',
+          imageUrl: widget.producto['img_producto'] != null
+              ? '${_directoryImage}/${widget.producto['img_producto']}'
+              : 'assets/img/logo_pizza.jfif',
           categoryName: '${widget.producto['id_producto']}',
           productName: '${widget.producto['producto']}',
           price: precio,
