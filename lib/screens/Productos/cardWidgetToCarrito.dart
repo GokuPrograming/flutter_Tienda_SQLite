@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_product_card/flutter_product_card.dart';
 import 'package:counter_button/counter_button.dart';
+import 'package:store_sqlite/config/globalValues.dart';
 import 'package:store_sqlite/controller/carrito_controller.dart';
 
 class Cardwidgettocarrito extends StatefulWidget {
@@ -69,13 +70,10 @@ class _CardwidgetState extends State<Cardwidgettocarrito> {
               // Validaciones
               setState(
                 () {
-                  carritoController.insertCarrito('carrito', {
-                    'id_producto': widget.producto['id_producto'],
-                    'cantidad': _counterValue,
-                    'subtotal': subtotal,
-                  });
+                  inSertarACarrito(subtotal);
                   _counterValue = 0;
-
+                  Globalvalues.refrecarCarritoContador.value =
+                      !Globalvalues.refrecarCarritoContador.value;
                   // Feedback al usuario
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
@@ -96,5 +94,26 @@ class _CardwidgetState extends State<Cardwidgettocarrito> {
         ),
       ],
     );
+  }
+
+  Future<int?> inSertarACarrito(double subtotal) async {
+    try {
+      int resp = await carritoController.insertCarrito('carrito', {
+        'id_producto': widget.producto['id_producto'],
+        'cantidad': _counterValue,
+        'subtotal': subtotal,
+      });
+
+      if (resp > 0) {
+        print(resp);
+
+        return resp;
+      } else {
+        print('no se mando nada');
+      }
+    } catch (e) {
+      'fallo al haceer la insercion $e';
+    }
+    return null;
   }
 }

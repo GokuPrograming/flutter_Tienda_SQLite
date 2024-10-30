@@ -14,7 +14,8 @@ class CarritoController {
     var result = await con.query('id_carrito');
     return result.map((carrito) => CarritoModel.fromMap(carrito)).toList();
   }
-    Future<List<Map<String, dynamic>>?> mostrarTodosLosCarritos() async {
+
+  Future<List<Map<String, dynamic>>?> mostrarTodosLosCarritos() async {
     var con = await _dataBase.database;
     var result = await con.rawQuery('''
     SELECT *,sum(cantidad)  as cantidad, sum(subtotal) as subtotal
@@ -36,5 +37,13 @@ class CarritoController {
     var con = await _dataBase.database;
     return await con
         .delete(table, where: 'id_producto = ?', whereArgs: [id_producto]);
+  }
+
+  Future<List<Map<String, Object?>>> conteoDeArticulosEnCarrito() async {
+    var con = await _dataBase.database;
+    String sql = 'select sum(cantidad) from carrito';
+    var result = await con.rawQuery(sql);
+    print(result);
+    return result;
   }
 }

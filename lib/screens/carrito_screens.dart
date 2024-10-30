@@ -1,4 +1,4 @@
-import 'package:cool_alert/cool_alert.dart';
+
 import 'package:counter_button/counter_button.dart';
 import 'package:flutter/material.dart';
 import 'package:store_sqlite/config/globalValues.dart';

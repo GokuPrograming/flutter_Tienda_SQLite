@@ -1,8 +1,10 @@
 import 'package:animated_botton_navigation/animated_botton_navigation.dart';
 import 'package:flutter/material.dart';
+import 'package:store_sqlite/controller/carrito_controller.dart';
 import 'package:store_sqlite/screens/calendarScreen.dart';
 import 'package:store_sqlite/screens/menuApp/widgetMenuApp/PedidosListaWidget.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:badges/badges.dart' as badges;
 
 class MenuappScreenv extends StatefulWidget {
   const MenuappScreenv({super.key});
@@ -60,6 +62,29 @@ Future<void> requestPermissionManageStorage() async {
   }
 }
 
+CarritoController carritoController = CarritoController();
+int _cartBadgeAmount = 4;
+int relaConteo = 0;
+late bool _showCartBadge;
+
+// Future<List<Map>> NumeroArticulosEnCArrito() async {
+//   var resp = await carritoController.conteoDeArticulosEnCarrito();
+//   print(' este es  el parametro de articulos=$resp');
+
+//   relaConteo = (resp[0]['sum(cantidad)'] ?? 0) as int;
+//   print('in metodo=$relaConteo');
+//   // for (var cantidad in resp) {
+//   //   cantidad['sum(cantidad)'];
+//   //   print('el for');
+//   //   print(cantidad['sum(cantidad)']);
+//   //   cantidad['sum(cantidad)'];
+//   // }
+//   print('cantidad carirto cast');
+//   // print(cantidadCarrito);
+//   return resp;
+// }
+
+// Color color = Colors.red;
 Future<void> requestPermissionStorage() async {
   final permission = Permission.manageExternalStorage;
 
@@ -76,26 +101,27 @@ Future<void> requestPermissionStorage() async {
 }
 
 class _MenuappScreenvState extends State<MenuappScreenv> {
+  Future<void> _initializeCartBadge() async {
+    await NumeroArticulosEnCArrito(); // Espera a que se complete
+    setState(() {
+      _cartBadgeAmount =
+          relaConteo; // Asigna el valor actualizado dentro de setState
+    });
+    print('nex?=$_cartBadgeAmount');
+  }
+
+  Future<List<Map>> NumeroArticulosEnCArrito() async {
+    var resp = await carritoController.conteoDeArticulosEnCarrito();
+    print('este es el parametro de articulos=$resp');
+    relaConteo = (resp[0]['sum(cantidad)'] ?? 0) as int;
+    print('in metodo=$relaConteo');
+    return resp;
+  }
+
   @override
   void initState() {
     super.initState();
-
-    Future<void> _requestStoragePermission() async {
-      var status = await Permission.photos.request();
-
-      if (status.isGranted) {
-        // Permiso concedido, navega a la página principal
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const MenuappScreenv()),
-        );
-      } else if (status.isPermanentlyDenied) {
-        // El permiso fue denegado permanentemente, abre la configuración de la aplicación
-        openAppSettings();
-      } else if (status.isDenied) {
-        // El permiso fue denegado, puedes mostrar un mensaje al usuario
-        // o volver a intentar la solicitud
-      }
-    }
+    _initializeCartBadge();
   }
 
   int _currentIndex = 0;
@@ -118,6 +144,7 @@ class _MenuappScreenvState extends State<MenuappScreenv> {
 
   @override
   Widget build(BuildContext context) {
+    _showCartBadge = _cartBadgeAmount > 0;
     return Scaffold(
       drawer: SafeArea(
         child: Container(
@@ -194,15 +221,10 @@ class _MenuappScreenvState extends State<MenuappScreenv> {
       ),
       appBar: AppBar(
         title: Text('Glorys Pizza Admin App'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.pushNamed(context, '/carrito');
-            },
-            icon: Icon(Icons.shopping_cart),
-          ),
-        ],
         backgroundColor: const Color.fromARGB(131, 33, 31, 31),
+        actions: <Widget>[
+          _shoppingCartBadge(),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -231,6 +253,29 @@ class _MenuappScreenvState extends State<MenuappScreenv> {
           });
         },
       ),
+    );
+  }
+
+  Widget _shoppingCartBadge() {
+    return badges.Badge(
+      position: badges.BadgePosition.topEnd(top: 0, end: 3),
+      badgeAnimation: badges.BadgeAnimation.slide(
+          // disappearanceFadeAnimationDuration: Duration(milliseconds: 200),
+          // curve: Curves.easeInCubic,
+          ),
+      showBadge: _showCartBadge,
+      badgeStyle: badges.BadgeStyle(
+        badgeColor: const Color.fromARGB(255, 172, 6, 6),
+      ),
+      badgeContent: Text(
+        _cartBadgeAmount.toString(),
+        style: TextStyle(color: Colors.white),
+      ),
+      child: IconButton(
+          icon: Icon(Icons.shopping_cart),
+          onPressed: () {
+            Navigator.pushNamed(context, '/carrito');
+          }),
     );
   }
 }

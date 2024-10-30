@@ -1,8 +1,8 @@
 import 'dart:io';
-// Asegúrate de tener esta dependencia
-import 'package:image_picker/image_picker.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_product_card/flutter_product_card.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:store_sqlite/config/globalValues.dart';
 import 'package:store_sqlite/controller/carrito_controller.dart';
