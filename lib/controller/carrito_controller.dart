@@ -32,9 +32,9 @@ class CarritoController {
         where: 'id_carrito = ?', whereArgs: [row['id_carrito']]);
   }
 
-  Future<int> eliminarCarrito(String table, int id_carrito) async {
+  Future<int> eliminarCarrito(String table, int id_producto) async {
     var con = await _dataBase.database;
     return await con
-        .delete(table, where: 'id_carrito = ?', whereArgs: [id_carrito]);
+        .delete(table, where: 'id_producto = ?', whereArgs: [id_producto]);
   }
 }

@@ -1,12 +1,8 @@
 import 'package:animated_botton_navigation/animated_botton_navigation.dart';
 import 'package:flutter/material.dart';
-import 'package:store_sqlite/controller/producto_controller.dart';
-import 'package:store_sqlite/database/database.dart';
-import 'package:store_sqlite/models/producto_model.dart';
-import 'package:flutter_product_card/flutter_product_card.dart';
 import 'package:store_sqlite/screens/calendarScreen.dart';
 import 'package:store_sqlite/screens/menuApp/widgetMenuApp/PedidosListaWidget.dart';
-import 'package:store_sqlite/screens/menuApp/widgetMenuApp/drawer.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class MenuappScreenv extends StatefulWidget {
   const MenuappScreenv({super.key});
@@ -15,7 +11,93 @@ class MenuappScreenv extends StatefulWidget {
   State<MenuappScreenv> createState() => _MenuappScreenvState();
 }
 
+Future<void> requestPermission() async {
+  final permission = Permission.location;
+
+  if (await permission.isDenied) {
+    await permission.request();
+  }
+}
+
+Future<bool> checkPermissionStatus() async {
+  final permission = Permission.location;
+  return await permission.status.isGranted;
+}
+
+Future<void> requestPermissionCamera() async {
+  final permission = Permission.storage;
+
+  if (await permission.isDenied) {
+    await permission.request();
+  }
+}
+
+Future<bool> checkPermissionStatusCamera() async {
+  final permission = Permission.camera;
+
+  return await permission.status.isGranted;
+}
+
+Future<void> requestPermissionManageStorage() async {
+  final permission = Permission.manageExternalStorage;
+
+  if (await permission.isDenied) {
+    // Solicitar el permiso
+    final result = await permission.request();
+
+    // Manejar el resultado
+    if (result.isGranted) {
+      print('Se le dieron los permisos');
+    } else if (result.isDenied) {
+      print('Permiso denegado, no se puede acceder al almacenamiento');
+    } else if (result.isPermanentlyDenied) {
+      print('Permiso permanentemente denegado, redirigiendo a configuración');
+      // Redirigir a la configuración de la app
+      openAppSettings();
+    }
+  } else {
+    print('Ya tiene permisos de almacenamiento');
+  }
+}
+
+Future<void> requestPermissionStorage() async {
+  final permission = Permission.manageExternalStorage;
+
+  if (await permission.isDenied) {
+    final result = await permission.request();
+    if (result.isGranted) {
+      // Permission is granted
+    } else if (result.isDenied) {
+      // Permission is denied
+    } else if (result.isPermanentlyDenied) {
+      // Permission is permanently denied
+    }
+  }
+}
+
 class _MenuappScreenvState extends State<MenuappScreenv> {
+  @override
+  void initState() {
+    super.initState();
+
+    Future<void> _requestStoragePermission() async {
+      var status = await Permission.photos.request();
+
+      if (status.isGranted) {
+        // Permiso concedido, navega a la página principal
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const MenuappScreenv()),
+        );
+      } else if (status.isPermanentlyDenied) {
+        // El permiso fue denegado permanentemente, abre la configuración de la aplicación
+        openAppSettings();
+      } else if (status.isDenied) {
+        // El permiso fue denegado, puedes mostrar un mensaje al usuario
+        // o volver a intentar la solicitud
+      }
+    }
+  }
+
   int _currentIndex = 0;
 
   final List<Widget> _pages = [
@@ -63,6 +145,9 @@ class _MenuappScreenvState extends State<MenuappScreenv> {
                 ),
                 ListTile(
                   onTap: () {
+                    ///perdir permisos
+                    requestPermissionManageStorage();
+                    // requestPermissionStorage()
                     Navigator.pushNamed(context, '/listaProductos');
                   },
                   leading: Icon(Icons.food_bank),
