@@ -1,5 +1,6 @@
 import 'package:animated_botton_navigation/animated_botton_navigation.dart';
 import 'package:flutter/material.dart';
+import 'package:store_sqlite/config/globalValues.dart';
 import 'package:store_sqlite/controller/carrito_controller.dart';
 import 'package:store_sqlite/screens/calendarScreen.dart';
 import 'package:store_sqlite/screens/menuApp/widgetMenuApp/PedidosListaWidget.dart';
@@ -101,20 +102,23 @@ Future<void> requestPermissionStorage() async {
 }
 
 class _MenuappScreenvState extends State<MenuappScreenv> {
+  int _cartBadgeAmount = 4;
+  int relaConteo = 0;
+  late bool _showCartBadge = true;
+
   Future<void> _initializeCartBadge() async {
-    await NumeroArticulosEnCArrito(); // Espera a que se complete
+    await NumeroArticulosEnCArrito();
     setState(() {
-      _cartBadgeAmount =
-          relaConteo; // Asigna el valor actualizado dentro de setState
+      _cartBadgeAmount = relaConteo;
+
+      Globalvalues.carritoContador.value =
+          relaConteo; // Actualiza el valor global
     });
-    print('nex?=$_cartBadgeAmount');
   }
 
   Future<List<Map>> NumeroArticulosEnCArrito() async {
     var resp = await carritoController.conteoDeArticulosEnCarrito();
-    print('este es el parametro de articulos=$resp');
     relaConteo = (resp[0]['sum(cantidad)'] ?? 0) as int;
-    print('in metodo=$relaConteo');
     return resp;
   }
 
@@ -257,25 +261,28 @@ class _MenuappScreenvState extends State<MenuappScreenv> {
   }
 
   Widget _shoppingCartBadge() {
-    return badges.Badge(
-      position: badges.BadgePosition.topEnd(top: 0, end: 3),
-      badgeAnimation: badges.BadgeAnimation.slide(
-          // disappearanceFadeAnimationDuration: Duration(milliseconds: 200),
-          // curve: Curves.easeInCubic,
+    return ValueListenableBuilder<int>(
+      valueListenable: Globalvalues.carritoContador,
+      builder: (BuildContext context, int value, Widget? child) {
+        return badges.Badge(
+          position: badges.BadgePosition.topEnd(top: 0, end: 3),
+          badgeAnimation: badges.BadgeAnimation.slide(),
+          showBadge: _showCartBadge,
+          badgeStyle: badges.BadgeStyle(
+            badgeColor: const Color.fromARGB(255, 172, 6, 6),
           ),
-      showBadge: _showCartBadge,
-      badgeStyle: badges.BadgeStyle(
-        badgeColor: const Color.fromARGB(255, 172, 6, 6),
-      ),
-      badgeContent: Text(
-        _cartBadgeAmount.toString(),
-        style: TextStyle(color: Colors.white),
-      ),
-      child: IconButton(
-          icon: Icon(Icons.shopping_cart),
-          onPressed: () {
-            Navigator.pushNamed(context, '/carrito');
-          }),
+          badgeContent: Text(
+            value.toString(),
+            style: TextStyle(color: Colors.white),
+          ),
+          child: IconButton(
+            icon: Icon(Icons.shopping_cart),
+            onPressed: () {
+              Navigator.pushNamed(context, '/carrito');
+            },
+          ),
+        );
+      },
     );
   }
 }

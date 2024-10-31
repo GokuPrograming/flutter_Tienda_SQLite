@@ -15,20 +15,24 @@ class Productos extends StatefulWidget {
 }
 
 class _ProductosState extends State<Productos> {
+  late ProductoController productoController = ProductoController();
+  int _cartBadgeAmount = 4;
+  int relaConteo = 0;
+  late bool _showCartBadge = true;
+
   Future<void> _initializeCartBadge() async {
-    await NumeroArticulosEnCArrito(); // Espera a que se complete
+    await NumeroArticulosEnCArrito();
     setState(() {
-      _cartBadgeAmount =
-          relaConteo; // Asigna el valor actualizado dentro de setState
+      _cartBadgeAmount = relaConteo;
+
+      Globalvalues.carritoContador.value =
+          relaConteo; // Actualiza el valor global
     });
-    print('nex?=$_cartBadgeAmount');
   }
 
   Future<List<Map>> NumeroArticulosEnCArrito() async {
     var resp = await carritoController.conteoDeArticulosEnCarrito();
-    print('este es el parametro de articulos=$resp');
     relaConteo = (resp[0]['sum(cantidad)'] ?? 0) as int;
-    print('in metodo=$relaConteo');
     return resp;
   }
 
@@ -38,22 +42,10 @@ class _ProductosState extends State<Productos> {
     _initializeCartBadge();
   }
 
-  late ProductoController productoController = ProductoController();
-  int _cartBadgeAmount = 4;
-  int relaConteo = 0;
-  late bool _showCartBadge = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(actions: <Widget>[
-        ValueListenableBuilder(
-          valueListenable: Globalvalues.refrecarCarritoContador,
-          builder: (BuildContext context, bool value, Widget? child) {
-            // _initializeCartBadge();
-            return _shoppingCartBadge();
-          },
-        )
-      ]),
+      appBar: AppBar(actions: <Widget>[_shoppingCartBadge()]),
       body: FutureBuilder<List<Map<String, dynamic>>?>(
         future: productoController.mostrarProductosConCategoria(),
         builder:
@@ -70,10 +62,8 @@ class _ProductosState extends State<Productos> {
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               childAspectRatio: 0.5,
-              crossAxisSpacing:
-                  10, // usualmente se utilizan valores mayores que 0
-              mainAxisSpacing:
-                  10, // usualmente se utilizan valores mayores que 0
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
             ),
             itemCount: snapshot.data!.length,
             itemBuilder: (BuildContext context, int index) {
@@ -86,25 +76,29 @@ class _ProductosState extends State<Productos> {
   }
 
   Widget _shoppingCartBadge() {
-    return badges.Badge(
-      position: badges.BadgePosition.topEnd(top: 0, end: 3),
-      badgeAnimation: badges.BadgeAnimation.slide(
-          // disappearanceFadeAnimationDuration: Duration(milliseconds: 200),
-          // curve: Curves.easeInCubic,
+    return ValueListenableBuilder<int>(
+      valueListenable: Globalvalues.carritoContador,
+      builder: (BuildContext context, int value, Widget? child) {
+        return badges.Badge(
+          position: badges.BadgePosition.topEnd(top: 0, end: 3),
+          badgeAnimation: badges.BadgeAnimation.slide(),
+          showBadge: _showCartBadge,
+          badgeStyle: badges.BadgeStyle(
+            badgeColor: const Color.fromARGB(255, 172, 6, 6),
           ),
-      showBadge: _showCartBadge,
-      badgeStyle: badges.BadgeStyle(
-        badgeColor: const Color.fromARGB(255, 172, 6, 6),
-      ),
-      badgeContent: Text(
-        _cartBadgeAmount.toString(),
-        style: TextStyle(color: Colors.white),
-      ),
-      child: IconButton(
-          icon: Icon(Icons.shopping_cart),
-          onPressed: () {
-            Navigator.pushNamed(context, '/carrito');
-          }),
+          badgeContent: Text(
+            value.toString(),
+            style: TextStyle(color: Colors.white),
+          ),
+          child: IconButton(
+            icon: Icon(Icons.shopping_cart),
+            onPressed: () {
+              Navigator.pushNamed(context, '/carrito');
+            },
+          ),
+        );
+      },
     );
   }
+
 }

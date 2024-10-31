@@ -63,17 +63,17 @@ class _CardwidgetState extends State<Cardwidgettocarrito> {
         // Otro SizedBox para el espacio entre CounterButton e IconButton
         SizedBox(height: 1), // Ajusta este valor también
         IconButton(
-          onPressed: () {
+          onPressed: () async {
             print(_counterValue);
+
             subtotal = precio * _counterValue;
             if (subtotal > 0 && _counterValue > 0) {
               // Validaciones
               setState(
                 () {
                   inSertarACarrito(subtotal);
+                  // Actualiza el contador global para que se refleje el cambio en el badge
                   _counterValue = 0;
-                  Globalvalues.refrecarCarritoContador.value =
-                      !Globalvalues.refrecarCarritoContador.value;
                   // Feedback al usuario
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
@@ -105,9 +105,12 @@ class _CardwidgetState extends State<Cardwidgettocarrito> {
       });
 
       if (resp > 0) {
-        print(resp);
-
-        return resp;
+        // Aquí se obtiene el número de productos en el carrito desde la base de datos
+        var resp = await carritoController.conteoDeArticulosEnCarrito();
+        int cantidadProductos = (resp[0]['sum(cantidad)'] ?? 0) as int;
+        Globalvalues.carritoContador.value = cantidadProductos;
+        print('cantidad=$cantidadProductos');
+        return cantidadProductos;
       } else {
         print('no se mando nada');
       }
