@@ -73,11 +73,14 @@ class _PedidoslistawidgetState extends State<Pedidoslistawidget> {
                   padding: const EdgeInsets.all(8.0),
                   child: InkWell(
                     onTap: () {
-                      Navigator.pushNamed(context, '/informacionPedido',
-                          arguments: {
-                            'id_pedido': snapshot.data![index].id_pedido,
-                            'id_status': snapshot.data![index].id_status
-                          });
+                      Navigator.pushNamed(
+                        context,
+                        '/informacionPedido',
+                        arguments: {
+                          'id_pedido': snapshot.data![index].id_pedido,
+                          'id_status': snapshot.data![index].id_status
+                        },
+                      );
                     },
                     child: Container(
                       width: LargoContenedorList,

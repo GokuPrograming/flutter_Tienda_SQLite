@@ -25,7 +25,7 @@ class _ComunidadScreenState extends State<ComunidadScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(title: Text('Lista De Comunidades'),),
       floatingActionButton: FloatingActionButton(onPressed: () {
         modal(context, null, null);
       }),
@@ -96,14 +96,14 @@ class _ComunidadScreenState extends State<ComunidadScreen> {
                                 },
                                 icon: Icon(Icons.edit, color: Colors.blue),
                               ),
-                              IconButton(
-                                icon:
-                                    const Icon(Icons.delete, color: Colors.red),
-                                onPressed: () {
-                                  // Acción para eliminar el elemento
-                                  // Aquí podrías mostrar una confirmación de eliminación antes de proceder.
-                                },
-                              ),
+                              // IconButton(
+                              //   icon:
+                              //       const Icon(Icons.delete, color: Colors.red),
+                              //   onPressed: () {
+                              //     // Acción para eliminar el elemento
+                              //     // Aquí podrías mostrar una confirmación de eliminación antes de proceder.
+                              //   },
+                              // ),
                             ],
                           ),
                         ],

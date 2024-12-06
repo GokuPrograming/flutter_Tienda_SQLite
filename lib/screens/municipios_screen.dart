@@ -17,7 +17,7 @@ class _MunicipiosScreenState extends State<MunicipiosScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Lista de Categorias'),
+        title: const Text('Lista De Municipios'),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -60,7 +60,7 @@ class _MunicipiosScreenState extends State<MunicipiosScreen> {
                                 // Texto del pedido y fecha de entrega
                                 Expanded(
                                   child: Text(
-                                    'id: ${snapshot.data![index].id_municipio}\nCategoria: ${snapshot.data![index].municipio}',
+                                    'id: ${snapshot.data![index].id_municipio}\n Municipio: ${snapshot.data![index].municipio}',
                                     textAlign: TextAlign.left,
                                     style: const TextStyle(
                                       fontSize: 16,
@@ -88,14 +88,14 @@ class _MunicipiosScreenState extends State<MunicipiosScreen> {
                                   },
                                 ),
                                 // Botón de borrar
-                                IconButton(
-                                  icon: const Icon(Icons.delete,
-                                      color: Colors.red),
-                                  onPressed: () {
-                                    // Acción para eliminar el elemento
-                                    // Aquí podrías mostrar una confirmación de eliminación antes de proceder.
-                                  },
-                                ),
+                                // IconButton(
+                                //   icon: const Icon(Icons.delete,
+                                //       color: Colors.red),
+                                //   onPressed: () {
+                                //     // Acción para eliminar el elemento
+                                //     // Aquí podrías mostrar una confirmación de eliminación antes de proceder.
+                                //   },
+                                // ),
                               ],
                             ),
                           ],

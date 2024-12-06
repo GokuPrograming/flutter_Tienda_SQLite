@@ -396,7 +396,6 @@ class _CarritoScreensState extends State<CarritoScreens> {
                                                     .refrescarCarrito.value =
                                                 !Globalvalues
                                                     .refrescarCarrito.value;
-
                                             // Navigator.pop(context);
                                             toast.showToast(
                                                 context,

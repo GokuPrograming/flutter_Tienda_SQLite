@@ -37,6 +37,7 @@ class CarritoController {
     var con = await _dataBase.database;
     return await con
         .delete(table, where: 'id_producto = ?', whereArgs: [id_producto]);
+        
   }
 
   Future<List<Map<String, Object?>>> conteoDeArticulosEnCarrito() async {

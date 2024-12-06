@@ -87,14 +87,14 @@ class _CategoriaScreenState extends State<CategoriaScreen> {
                                   },
                                 ),
                                 // Botón de borrar
-                                IconButton(
-                                  icon: const Icon(Icons.delete,
-                                      color: Colors.red),
-                                  onPressed: () {
-                                    // Acción para eliminar el elemento
-                                    // Aquí podrías mostrar una confirmación de eliminación antes de proceder.
-                                  },
-                                ),
+                                // IconButton(
+                                //   icon: const Icon(Icons.delete,
+                                //       color: Colors.red),
+                                //   onPressed: () {
+                                //     // Acción para eliminar el elemento
+                                //     // Aquí podrías mostrar una confirmación de eliminación antes de proceder.
+                                //   },
+                                // ),
                               ],
                             ),
                           ],

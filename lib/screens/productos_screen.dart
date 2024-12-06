@@ -30,24 +30,26 @@ class _ProductosState extends State<ProductosScreen> {
               icon: Icon(Icons.shop))
         ],
       ),
-      floatingActionButton: FloatingActionButton(onPressed: () {
-        showModalBottomSheet(
-          context: context,
-          isScrollControlled:
-              true, // Permite que el modal ocupe toda la pantalla
-          // barrierColor: Colors.greenAccent,
-          backgroundColor: const Color.fromARGB(255, 46, 45, 41),
-          elevation: 10,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          builder: (BuildContext context) {
-            return editarProducto(
-              widget: null,
+      floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.add),
+          onPressed: () {
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled:
+                  true, // Permite que el modal ocupe toda la pantalla
+              // barrierColor: Colors.greenAccent,
+              backgroundColor: const Color.fromARGB(255, 46, 45, 41),
+              elevation: 10,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              builder: (BuildContext context) {
+                return editarProducto(
+                  widget: null,
+                );
+              },
             );
-          },
-        );
-      }),
+          }),
       body: ValueListenableBuilder(
           valueListenable: Globalvalues.refrescarWidget,
           builder: (BuildContext context, bool value, Widget? child) {

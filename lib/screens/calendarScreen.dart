@@ -24,26 +24,28 @@ class _TableBasicsExampleState extends State<TableBasicsExample> {
     // mostrarPedidoDatosCliente();
     main(); // Cargar eventos al inicio
   }
-Future<List<Widget>> _buildEventMarkers(DateTime date, List events) async {
-  List<Widget> markers = [];
 
-  for (var event in events) {
-    Color color = await SelectColorPoints(date); // Obtiene el color de cada evento
-    markers.add(
-      Container(
-        margin: const EdgeInsets.symmetric(horizontal: 1.5),
-        width: 8,
-        height: 8,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: color,
+  Future<List<Widget>> _buildEventMarkers(DateTime date, List events) async {
+    List<Widget> markers = [];
+
+    for (var event in events) {
+      Color color =
+          await SelectColorPoints(date); // Obtiene el color de cada evento
+      markers.add(
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 1.5),
+          width: 8,
+          height: 8,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: color,
+          ),
         ),
-      ),
-    );
-  }
+      );
+    }
 
-  return markers;
-}
+    return markers;
+  }
 
   Future<List<Map<String, dynamic>>?> recuperandoDatos() async {
     List<Map<String, dynamic>>? datos =
@@ -57,12 +59,15 @@ Future<List<Widget>> _buildEventMarkers(DateTime date, List events) async {
 
     if (datos != null && datos.isNotEmpty) {
       for (var dato in datos) {
+        print(dato);
         String fecha = dato['fecha_entrega'];
-        String eventTitle = dato['colonia'];
-        String eventDescp = dato['calle'];
+        String eventTitle = dato['nombre_cliente'];
+
+        String eventDescp =
+            '${dato['calle']} ,${dato['colonia']} ,${dato['no_exterior']}';
 
         // Revisa si la fecha se almacena en el formato correcto
-        print('Fecha: $fecha, Título: $eventTitle, Descripción: $eventDescp');
+        print('Fecha: $fecha, Usuario: $eventTitle, Descripción: $eventDescp');
 
         mySelectedEvents[fecha] ??= [];
         mySelectedEvents[fecha]!.add({
@@ -170,9 +175,19 @@ Future<List<Widget>> _buildEventMarkers(DateTime date, List events) async {
                             // Mostramos los eventos del día
                             ...eventosDelDia.map((event) {
                               return ListTile(
-                                title: Text('Título: ${event['eventTitle']}'),
+                                onTap: () {
+                                  // Navigator.pushNamed(
+                                  //     context, '/informacionPedido',
+                                  //     arguments: {
+                                  //       'id_pedido':
+                                  //           snapshot.data![index].id_pedido,
+                                  //       'id_status':
+                                  //           snapshot.data![index].id_status
+                                  //     });
+                                },
+                                title: Text('Cliente: ${event['eventTitle']}'),
                                 subtitle:
-                                    Text('Descripción: ${event['eventDescp']}'),
+                                    Text('Direccion: ${event['eventDescp']}'),
                               );
                             }).toList(),
 
@@ -207,45 +222,46 @@ Future<List<Widget>> _buildEventMarkers(DateTime date, List events) async {
               eventLoader: _listOfDayEvents,
 
               // Aquí está el `calendarBuilders` con los puntos de colores
-calendarBuilders: CalendarBuilders(
-  markerBuilder: (context, date, events) {
-    if (events.isNotEmpty) {
-      return FutureBuilder<List<Widget>>(
-        future: _buildEventMarkers(date, events),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Container(
-              margin: const EdgeInsets.symmetric(horizontal: 1.5),
-              width: 8,
-              height: 8,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.grey,
+              calendarBuilders: CalendarBuilders(
+                markerBuilder: (context, date, events) {
+                  if (events.isNotEmpty) {
+                    return FutureBuilder<List<Widget>>(
+                      future: _buildEventMarkers(date, events),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 1.5),
+                            width: 8,
+                            height: 8,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.grey,
+                            ),
+                          );
+                        } else if (snapshot.hasError) {
+                          return Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 1.5),
+                            width: 8,
+                            height: 8,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.red,
+                            ),
+                          );
+                        } else {
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: snapshot.data!,
+                          );
+                        }
+                      },
+                    );
+                  }
+                  return SizedBox(); // Si no hay eventos, no muestra nada
+                },
               ),
-            );
-          } else if (snapshot.hasError) {
-            return Container(
-              margin: const EdgeInsets.symmetric(horizontal: 1.5),
-              width: 8,
-              height: 8,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.red,
-              ),
-            );
-          } else {
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: snapshot.data!,
-            );
-          }
-        },
-      );
-    }
-    return SizedBox(); // Si no hay eventos, no muestra nada
-  },
-),
-           ),
+            ),
             if (_selectedDate != null)
               ..._listOfDayEvents(_selectedDate!).map((myEvents) =>
                   FutureBuilder<Color>(
