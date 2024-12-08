@@ -76,7 +76,7 @@ class _ComunidadScreenState extends State<ComunidadScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      '${comunidad['id_comunidad']}\n comunidad=${comunidad['comunidad']}\n municipio=${comunidad['municipio']}',
+                                      'id:${comunidad['id_comunidad']}\n Zona=${comunidad['comunidad']}\n campus=${comunidad['municipio']}',
                                       textAlign: TextAlign.left,
                                       style: const TextStyle(
                                         fontSize: 16,
@@ -210,11 +210,9 @@ class _ComunidadScreenState extends State<ComunidadScreen> {
                           // Si id_comunidad tiene un valor, estamos editando
                           _editarComunidad(
                               id_comunidad!, id_municipio, conComunidad.text);
-                        
                         }
 
-                       
-                       // Navigator.pop(context);
+                        // Navigator.pop(context);
                       } else {
                         Navigator.pop(context);
                         // Si algún campo es vacío o nulo, mostramos el mensaje de error
