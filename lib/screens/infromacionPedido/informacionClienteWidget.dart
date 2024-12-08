@@ -3,8 +3,7 @@ import 'package:store_sqlite/controller/pedido_controller.dart';
 
 class InformacionClientewidget extends StatefulWidget {
   final int? id;
-  const InformacionClientewidget(this.id,
-      {super.key}); 
+  const InformacionClientewidget(this.id, {super.key});
 
   @override
   State<InformacionClientewidget> createState() =>
@@ -21,11 +20,10 @@ class _InformacionpedidowidgetState extends State<InformacionClientewidget> {
 
     return Container(
       width: MediaQuery.sizeOf(context).width,
-      height: MediaQuery.sizeOf(context).height * .29,
-      decoration: BoxDecoration(color: const Color.fromARGB(255, 57, 56, 51)),
+      height: MediaQuery.sizeOf(context).height * .38,
+      padding: const EdgeInsets.all(8.0), // Espacio alrededor del contenedor
       child: FutureBuilder<List<Map<String, dynamic>>?>(
-        future: informacionPedido
-            .mostrarPedidoDatosCliente(widget.id), // Usar el id aquí
+        future: informacionPedido.mostrarPedidoDatosCliente(widget.id),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -39,35 +37,50 @@ class _InformacionpedidowidgetState extends State<InformacionClientewidget> {
               itemCount: pedidos.length,
               itemBuilder: (context, index) {
                 var pedido = pedidos[index];
-                return Container(
-                  child: ListTile(
-                    title: Text('Datos De Entrega:',
-                        style: TextStyle(fontWeight: FontWeight.bold)),
-                    subtitle: Column(
+                return Card(
+                  margin: const EdgeInsets.symmetric(
+                      vertical: 8.0), // Margen vertical entre tarjetas
+                  elevation: 5, // Sombra de la tarjeta
+                  shape: RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.circular(12), // Bordes redondeados
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(
+                        12.0), // Padding interno para el contenido
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Text(
+                          'Datos De Entrega:',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 16),
+                        ),
+                        SizedBox(
+                            height:
+                                8.0), // Espacio entre el título y el contenido
                         Text('Cliente: ${pedido['nombre_cliente']}'),
-                        IconButton(
-                            onPressed: () {
-                              print(' ${pedido['num_telefono']}');
-                            },
-                            icon: Text(
+                        SizedBox(height: 4.0),
+                        Row(
+                          children: [
+                            Icon(Icons.phone, size: 18),
+                            SizedBox(width: 4.0),
+                            Text(
                               'Num Tel: ${pedido['num_telefono']}',
                               style: TextStyle(fontWeight: FontWeight.bold),
-                            )),
-
-                        Text(
-                          'Municipio:${pedido['municipio']}',
+                            ),
+                          ],
                         ),
-                        SizedBox(height: 4.0), // Espacio entre textos
-                        Text('Comunidad: ${pedido['comunidad']}'),
+                        SizedBox(height: 6.0),
+                        Text('Campus: ${pedido['municipio']}'),
                         SizedBox(height: 4.0),
-                        Text('Colonia: ${pedido['colonia']}'),
+                        Text('Zona: ${pedido['comunidad']}'),
                         SizedBox(height: 4.0),
-                        Text('Calle: ${pedido['calle']}'),
+                        Text('Carrera: ${pedido['colonia']}'),
                         SizedBox(height: 4.0),
-                        Text('No.Ext: ${pedido['no_exterior']}'),
+                        Text('Semestre: ${pedido['calle']}'),
                         SizedBox(height: 4.0),
+                        Text('No.Control: ${pedido['no_exterior']}'),
                       ],
                     ),
                   ),

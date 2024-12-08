@@ -150,82 +150,108 @@ class _MenuappScreenvState extends State<MenuappScreenv> {
   Widget build(BuildContext context) {
     _showCartBadge = _cartBadgeAmount > 0;
     return Scaffold(
-      drawer: SafeArea(
-        child: Container(
-          child: ListTileTheme(
-            textColor: Colors.white,
-            iconColor: Colors.white,
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Container(
-                  width: 128.0,
-                  height: 128.0,
-                  margin: const EdgeInsets.only(
-                    top: 24.0,
-                    bottom: 64.0,
-                  ),
-                  clipBehavior: Clip.antiAlias,
-                  decoration: BoxDecoration(
-                    color: Colors.black26,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Image.asset(
-                    'assets/img/logo_pizza.jfif',
-                  ),
-                ),
-                ListTile(
-                  onTap: () {
-                    ///perdir permisos
-                    requestPermissionManageStorage();
-                    // requestPermissionStorage()
-                    Navigator.pushNamed(context, '/listaProductos');
-                  },
-                  leading: Icon(Icons.food_bank),
-                  title: Text('Productos'),
-                ),
-                ListTile(
-                  onTap: () {
-                    Navigator.pushNamed(context, '/categoria');
-                  },
-                  leading: Icon(Icons.category),
-                  title: Text('Categorias'),
-                ),
-                ListTile(
-                  onTap: () {
-                    Navigator.pushNamed(context, '/municipios');
-                  },
-                  leading: Icon(Icons.location_city),
-                  title: Text('Municipios'),
-                ),
-                ListTile(
-                  onTap: () {
-                    Navigator.pushNamed(context, '/comunidades');
-                  },
-                  leading: Icon(Icons.gps_fixed),
-                  title: Text('Comunidades'),
-                ),
-                Spacer(),
-                DefaultTextStyle(
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.white54,
-                  ),
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(
-                      vertical: 16.0,
+      drawer: Container(
+        decoration: BoxDecoration(color: const Color.fromARGB(181, 0, 0, 0)),
+        child: ListTileTheme(
+          textColor: Colors.white,
+          iconColor: Colors.white,
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              // Título
+              Container(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 100.0, bottom: 3.0),
+                  child: Text(
+                    'LINCE FOOD',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.bold,
                     ),
-                    child: Text('Terms of Service | Privacy Policy'),
+                    textAlign: TextAlign.center,
                   ),
                 ),
-              ],
-            ),
+              ),
+              // Imagen con logo
+              Container(
+                width: 128.0,
+                height: 128.0,
+                margin: const EdgeInsets.only(
+                  top: 24.0,
+                  bottom: 64.0,
+                ),
+                clipBehavior: Clip.antiAlias,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                ),
+                child: Image.asset(
+                  'assets/img/logo_tec.jpeg',
+                ),
+              ),
+              ListTile(
+                onTap: () {
+                  ///perdir permisos
+                  requestPermissionManageStorage();
+                  // requestPermissionStorage()
+                  Navigator.pushNamed(context, '/listaProductos');
+                },
+                leading: Icon(Icons.food_bank),
+                title: Text('Productos'),
+              ),
+              ListTile(
+                onTap: () {
+                  Navigator.pushNamed(context, '/categoria');
+                },
+                leading: Icon(Icons.category),
+                title: Text('Categorias'),
+              ),
+              // ListTile(
+              //   onTap: () {
+              //     Navigator.pushNamed(context, '/municipios');
+              //   },
+              //   leading: Icon(Icons.location_city),
+              //   title: Text('Municipios'),
+              // ),
+              ListTile(
+                onTap: () {
+                  Navigator.pushNamed(context, '/comunidades');
+                },
+                leading: Icon(Icons.gps_fixed),
+                title: Text('Zonas del Tec'),
+              ),
+              ListTile(
+                onTap: () {
+                  Navigator.pushNamed(context, '/ubicate');
+                },
+                leading: Icon(Icons.gps_fixed),
+                title: Text('Ubicate'),
+              ),
+              Spacer(),
+              DefaultTextStyle(
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.white54,
+                ),
+                child: Container(
+                  margin: const EdgeInsets.symmetric(
+                    vertical: 16.0,
+                  ),
+                  child: Text('Terms of Service | Privacy Policy'),
+                ),
+              ),
+            ],
           ),
         ),
       ),
       appBar: AppBar(
-        title: Text('Glorys Pizza Admin App'),
-        backgroundColor: const Color.fromARGB(131, 33, 31, 31),
+        title: Text(
+          'Lin\'s Food APP',
+          style: TextStyle(
+            color: Color.fromARGB(255, 255, 248, 225), // Blanco cremoso
+          ),
+        ),
+        backgroundColor: const Color.fromARGB(255, 255, 99, 71),
         actions: <Widget>[
           _shoppingCartBadge(),
         ],

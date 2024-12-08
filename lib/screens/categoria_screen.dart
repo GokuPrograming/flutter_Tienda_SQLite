@@ -146,10 +146,11 @@ class _CategoriaScreenState extends State<CategoriaScreen> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  ///valida si la categoria viene vacia
-                  id_categoria == null
-                    ? 'NUEVA CATEGORÍA'
-                    : 'EDITAR CATEGORÍA'),
+
+                    ///valida si la categoria viene vacia
+                    id_categoria == null
+                        ? 'NUEVA CATEGORÍA'
+                        : 'EDITAR CATEGORÍA'),
               ),
               const SizedBox(height: 10),
               Padding(
@@ -182,17 +183,19 @@ class _CategoriaScreenState extends State<CategoriaScreen> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      ///valida si la categoria no esta vacia 
+                      ///valida si la categoria no esta vacia
                       if (conCategoria.text.trim().isNotEmpty) {
-                      
                         if (id_categoria == null) {
                           // Si id_categoria es nulo, significa que es una nueva categoría.
                           _agregarCategoria();
+                         
                         } else {
                           // Si id_categoria tiene un valor, significa que estamos editando.
                           _editarCategoria(id_categoria);
+                          // Navigator.pop(context);
                         }
                       } else {
+                        Navigator.pop(context);
                         ScaffoldMessenger.of(context).hideCurrentSnackBar();
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(

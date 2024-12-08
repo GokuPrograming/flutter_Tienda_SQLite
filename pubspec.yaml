@@ -48,7 +48,9 @@ dependencies:
   table_calendar: ^3.1.2
   toastification: ^2.3.0
   wolt_modal_sheet: ^0.9.3
-  flutter_launcher_icons: ^0.13.1 
+  flutter_launcher_icons: ^0.13.1
+  google_maps_flutter: ^2.10.0
+  connectivity_plus: ^4.0.1
 
 dev_dependencies:
   flutter_lints: ^5.0.0
@@ -56,9 +58,9 @@ dev_dependencies:
     sdk: flutter
 
 flutter_icons:
-  android: true  # Habilita el cambio de icono para Android
-  ios: true      # Habilita el cambio de icono para iOS
-  image_path: "assets/img/logo.png"  # Ruta de tu icono
+  android: true # Habilita el cambio de icono para Android
+  ios: true # Habilita el cambio de icono para iOS
+  image_path: "assets/img/logo_tec.jpeg" # Ruta de tu icono
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

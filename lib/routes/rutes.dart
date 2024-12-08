@@ -11,6 +11,7 @@ import 'package:store_sqlite/screens/loginResponsiveScreen.dart';
 import 'package:store_sqlite/screens/menuApp/MenuApp_screenV.dart';
 import 'package:store_sqlite/screens/municipios_screen.dart';
 import 'package:store_sqlite/screens/productos_screen.dart';
+import 'package:store_sqlite/screens/ubicate_screen.dart';
 
 class AppRoutes {
   static const menuScreen = '/MenuScreen';
@@ -23,6 +24,7 @@ class AppRoutes {
   static const municipioScreen = '/municipios';
   static const productosScreen = '/listaProductos';
   static const comunidadScreen = '/comunidades';
+  static const ubicate = '/ubicate';
   static final routes = <String, WidgetBuilder>{
     //recibe una cadena , y un witget
     loginScreen: (context) => const loginResponsiveScreen(
@@ -37,5 +39,6 @@ class AppRoutes {
     productosScreen: (context) => ProductosScreen(),
     comunidadScreen: (context) => ComunidadScreen(),
     menuScreen: (context) => MenuappScreenv(),
+    ubicate: (context) => UbicateScreen()
   };
 }

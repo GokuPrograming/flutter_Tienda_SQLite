@@ -45,7 +45,9 @@ class _ProductosState extends State<Productos> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(actions: <Widget>[_shoppingCartBadge()]),
+      appBar: AppBar(
+          actions: <Widget>[_shoppingCartBadge()],
+          backgroundColor: Color.fromARGB(255, 255, 99, 71)),
       body: FutureBuilder<List<Map<String, dynamic>>?>(
         future: productoController.mostrarProductosConCategoria(),
         builder:
@@ -100,5 +102,4 @@ class _ProductosState extends State<Productos> {
       },
     );
   }
-
 }

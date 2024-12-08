@@ -3,8 +3,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:store_sqlite/models/carrito_model.dart';
-import 'package:store_sqlite/models/categoria_model.dart';
-import 'package:store_sqlite/models/producto_model.dart';
+
 
 class TiendaDataBase {
   static final NAMEDB = 'PizzeriaDB';
@@ -144,33 +143,33 @@ VALUES
         db.execute(query12);
 
         String query13 = '''
-        insert into municipio(municipio)values('Cortazar'),('Celaya'),('Salamanca'),('Villagran')
+        insert into municipio(municipio)values('Campus 2')
         ''';
         db.execute(query13);
-        String query14 = '''
-        insert into comunidad(comunidad,id_municipio)values('Tierra Fria',1)
-        ''';
-        db.execute(query14);
-        String query15 = '''
-        insert into direccion(id_comunidad,calle,colonia,no_exterior,no_interior,num_telefono,nombre_cliente)
-        values                 (1,'Alameda','Alameda',104,104,'4111549487','Miguel Vera Franco')
-        ''';
-        db.execute(query15);
+        // String query14 = '''
+        // insert into comunidad(comunidad,id_municipio)values('Tierra Fria',1)
+        // ''';
+        // db.execute(query14);
+        // String query15 = '''
+        // insert into direccion(id_comunidad,calle,colonia,no_exterior,no_interior,num_telefono,nombre_cliente)
+        // values                 (1,'Alameda','Alameda',104,104,'4111549487','Miguel Vera Franco')
+        // ''';
+        // db.execute(query15);
 
-        String query17 = '''
-        insert into pedido(id_status,id_direccion,fecha_entrega)values(1,1,'2024-10-18'),(2,1,'2024-11-19'),(3,1,'2024-11-20')
-        ''';
-        db.execute(query17);
+        // String query17 = '''
+        // insert into pedido(id_status,id_direccion,fecha_entrega)values(1,1,'2024-10-18'),(2,1,'2024-11-19'),(3,1,'2024-11-20')
+        // ''';
+        // db.execute(query17);
 
-        String query16 = '''
-      INSERT INTO lista_pedido(id_pedido, id_producto, cantidad, subtotal, precio)
-      VALUES 
-      (1, 1, 2, 211, 105), 
-      (1, 3, 3, 333, 111),
-      (2, 3, 3, 333, 111),
-      (3, 3, 3, 333, 111)
-        ''';
-        db.execute(query16);
+      //   String query16 = '''
+      // INSERT INTO lista_pedido(id_pedido, id_producto, cantidad, subtotal, precio)
+      // VALUES 
+      // (1, 1, 2, 211, 105), 
+      // (1, 3, 3, 333, 111),
+      // (2, 3, 3, 333, 111),
+      // (3, 3, 3, 333, 111)
+      //   ''';
+        // db.execute(query16);
         // int? id_lista_pedido, id_producto, cantidad;
         // double? subtotal;
         print('se creo la base de datos');

@@ -34,7 +34,7 @@ class _CardwidgetState extends State<Cardwidgettocarrito> {
         ProductCard(
           imageUrl: widget.producto['img_producto'] != null
               ? '${_directoryImage}/${widget.producto['img_producto']}'
-              : 'assets/img/logo_pizza.jfif',
+              : 'assets/img/logo_tec.jpeg',
           categoryName: '${widget.producto['id_producto']}',
           productName: '${widget.producto['producto']}',
           price: precio,

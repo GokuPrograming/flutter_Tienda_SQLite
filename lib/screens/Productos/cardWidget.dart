@@ -106,7 +106,7 @@ class _CardwidgetState extends State<Cardwidget> {
           },
           imageUrl: widget.producto['img_producto'] != null
               ? '${_directoryImage}/${widget.producto['img_producto']}'
-              : 'assets/img/logo_pizza.jfif',
+              : 'assets/img/logo_tec.jpeg',
           categoryName: '${widget.producto['categoria']}',
           productName: '${widget.producto['producto']}',
           price: precio,
@@ -117,7 +117,7 @@ class _CardwidgetState extends State<Cardwidget> {
               isScrollControlled:
                   true, // Permite que el modal ocupe toda la pantalla
               // barrierColor: Colors.greenAccent,
-              backgroundColor: const Color.fromARGB(255, 46, 45, 41),
+              // backgroundColor: const Color.fromARGB(255, 46, 45, 41),
               elevation: 10,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0),
@@ -129,7 +129,8 @@ class _CardwidgetState extends State<Cardwidget> {
             );
           },
           cardColor: Colors.white,
-          textColor: Colors.black,
+          // textColor: Colors.black,
+
           borderRadius: 6.0,
         ),
         // Usa SizedBox para controlar el espacio entre el ProductCard y el CounterButton
@@ -151,9 +152,9 @@ class editarProducto extends StatefulWidget {
 }
 
 class _editarProductoState extends State<editarProducto> {
-  TextEditingController conNameProduct = TextEditingController();
-  TextEditingController conDescripcion = TextEditingController();
-  TextEditingController conPrecio = TextEditingController();
+  TextEditingController? conNameProduct = TextEditingController();
+  TextEditingController? conDescripcion = TextEditingController();
+  TextEditingController? conPrecio = TextEditingController();
   int? id_categoria;
   String? categoria;
 
@@ -162,24 +163,24 @@ class _editarProductoState extends State<editarProducto> {
     super.initState();
     if (widget.widget != null) {
       // Inicializa los controladores con los valores actuales del producto
-      conNameProduct.text = widget.widget?.producto['producto'];
-      conDescripcion.text = widget.widget?.producto['descripcion'];
-      conPrecio.text = widget.widget!.producto['precio'].toString();
+      conNameProduct?.text = widget.widget?.producto['producto'];
+      conDescripcion?.text = widget.widget?.producto['descripcion'];
+      conPrecio?.text = widget.widget!.producto['precio'].toString();
       id_categoria = widget.widget?.producto['id_categoria'];
       categoria = widget.widget?.producto['categoria'];
     } else {
-      conNameProduct.clear();
-      conDescripcion.clear();
-      conPrecio.clear();
+      conNameProduct?.clear();
+      conDescripcion?.clear();
+      conPrecio?.clear();
     }
   }
 
   @override
   void dispose() {
     // Limpia los controladores cuando el widget se destruye
-    conNameProduct.dispose();
-    conDescripcion.dispose();
-    conPrecio.dispose();
+    conNameProduct?.dispose();
+    conDescripcion?.dispose();
+    conPrecio?.dispose();
     super.dispose();
   }
 
@@ -205,6 +206,7 @@ class _editarProductoState extends State<editarProducto> {
     TextFormField txtPrecio = TextFormField(
       controller: conPrecio,
       decoration: InputDecoration(label: Text('Precio:')),
+      keyboardType: TextInputType.number, // Mostrar teclado numérico
     );
 
     return DraggableScrollableSheet(
@@ -275,26 +277,60 @@ class _editarProductoState extends State<editarProducto> {
                       width: MediaQuery.of(context).size.width * .3,
                       height: MediaQuery.of(context).size.height * .05,
                       decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 11, 141, 11),
-                          borderRadius: BorderRadius.circular(100)),
+                        color: const Color.fromARGB(255, 11, 141, 11),
+                        borderRadius: BorderRadius.circular(100),
+                      ),
                       child: IconButton(
-                          onPressed: () {
-                            double precio_Converter =
-                                double.parse(conPrecio.text);
-                            try {
+                        onPressed: () {
+                          try {
+                            // Validar que el campo de precio no esté vacío
+                            if (conPrecio!.text.isNotEmpty) {
+                              double precioConverter =
+                                  double.parse(conPrecio!.text);
+
+                              // Validar si es un producto existente o uno nuevo
                               if (widget.widget?.producto['id_producto'] !=
                                   null) {
-                                ActualizarProducto(precio_Converter);
-                              } else if (widget
-                                      .widget?.producto['id_producto'] ==
-                                  null) {
-                                insertarProducto(precio_Converter);
+                                // Actualizar producto
+                                if (id_categoria != null &&
+                                    conNameProduct!.text.isNotEmpty &&
+                                    conDescripcion!.text.isNotEmpty) {
+                                  ActualizarProducto(precioConverter);
+                                } else {
+                                  Navigator.pop(context);
+                                  _mostrarSnackBar(
+                                      context, 'Debe llenar todos los campos');
+                                }
+                              } else {
+                                // Insertar nuevo producto
+                                if (id_categoria != null &&
+                                    conNameProduct!.text.isNotEmpty &&
+                                    conDescripcion!.text.isNotEmpty) {
+                                  insertarProducto(precioConverter);
+                                } else {
+                                  Navigator.pop(context);
+                                  _mostrarSnackBar(
+                                      context, 'Debe llenar todos los campos');
+                                }
                               }
-                            } catch (e) {
-                              print('el error al editar el producto= $e');
+                            } else {
+                              // El campo de precio está vacío
+                              Navigator.pop(context);
+                              _mostrarSnackBar(
+                                  context, 'El precio no puede estar vacío');
                             }
-                          },
-                          icon: Icon(Icons.done)),
+                          } catch (e) {
+                            Navigator.pop(context);
+                            // Manejo de errores al convertir el precio
+                            print('Error: $e');
+                            _mostrarSnackBar(
+                              context,
+                              'Ingrese un valor numérico válido para el precio',
+                            );
+                          }
+                        },
+                        icon: const Icon(Icons.done),
+                      ),
                     ),
                   ),
                 ],
@@ -306,12 +342,22 @@ class _editarProductoState extends State<editarProducto> {
     );
   }
 
+  void _mostrarSnackBar(BuildContext context, String mensaje) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(mensaje),
+        backgroundColor: Colors.orange,
+      ),
+    );
+  }
+
   void insertarProducto(double precio_converter) {
     ProductoController productoController = ProductoController();
     productoController.insertProducto('producto', {
       'id_categoria': '$id_categoria',
-      'producto': conNameProduct.text,
-      'descripcion': conDescripcion.text,
+      'producto': conNameProduct?.text,
+      'descripcion': conDescripcion?.text,
       'precio': '${precio_converter}'
     });
     print('Producto Agregado');
@@ -324,8 +370,8 @@ class _editarProductoState extends State<editarProducto> {
     productoController.actualizarProducto('producto', {
       'id_producto': '${widget.widget!.producto['id_producto']}',
       'id_categoria': '$id_categoria',
-      'producto': conNameProduct.text,
-      'descripcion': conDescripcion.text,
+      'producto': conNameProduct?.text,
+      'descripcion': conDescripcion?.text,
       'precio': '${precio_converter}'
     });
     print('el producto se actualizo');

@@ -38,7 +38,7 @@ class _ProductosState extends State<ProductosScreen> {
               isScrollControlled:
                   true, // Permite que el modal ocupe toda la pantalla
               // barrierColor: Colors.greenAccent,
-              backgroundColor: const Color.fromARGB(255, 46, 45, 41),
+             // backgroundColor: const Color.fromARGB(255, 46, 45, 41),
               elevation: 10,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0),

@@ -1,4 +1,3 @@
-
 import 'package:counter_button/counter_button.dart';
 import 'package:flutter/material.dart';
 import 'package:store_sqlite/config/globalValues.dart';
@@ -73,7 +72,7 @@ class _CarritoScreensState extends State<CarritoScreens> {
                         shrinkWrap: true,
                         children: [
                           const Padding(
-                            padding: EdgeInsets.all(30.0),
+                            padding: EdgeInsets.all(20.0),
                             child: Text('Datos Del Pedido'),
                           ),
                           TextFormField(
@@ -96,35 +95,35 @@ class _CarritoScreensState extends State<CarritoScreens> {
                             keyboardType: TextInputType.name,
                             controller: conColonia,
                             decoration: const InputDecoration(
-                              label: Text('Colonia'),
-                              prefixIcon: Icon(Icons.add_location_alt_outlined),
+                              label: Text('Carrera'),
+                              prefixIcon: Icon(Icons.backpack),
                             ),
                           ),
                           TextFormField(
                             keyboardType: TextInputType.name,
                             controller: conCalle,
                             decoration: const InputDecoration(
-                              label: Text('Calle'),
-                              prefixIcon: Icon(Icons.streetview),
+                              label: Text('Semestre'),
+                              prefixIcon: Icon(Icons.school),
                             ),
                           ),
                           TextFormField(
                             keyboardType: TextInputType.number,
                             controller: conNoExterior,
                             decoration: const InputDecoration(
-                              label: Text('Número Exterior'),
+                              label: Text('Número Control'),
                               prefixIcon: Icon(Icons.numbers),
                             ),
                           ),
-                          TextFormField(
-                            keyboardType: TextInputType.number,
-                            controller: conNoInterior,
-                            decoration: const InputDecoration(
-                              label: Text('Número Interior'),
-                              prefixIcon: Icon(Icons.numbers),
-                            ),
-                          ),
-                          Text('Municipio'),
+                          // TextFormField(
+                          //   keyboardType: TextInputType.number,
+                          //   controller: conNoInterior,
+                          //   decoration: const InputDecoration(
+                          //     label: Text('Número Interior'),
+                          //     prefixIcon: Icon(Icons.numbers),
+                          //   ),
+                          // ),
+                          Text('Campus:'),
                           DropdownMunicipioCarWidget(
                             id_municipio,
                             onChanged: (MunicipioModel? municipio) {
@@ -143,7 +142,7 @@ class _CarritoScreensState extends State<CarritoScreens> {
                               }
                             },
                           ),
-                          Text('Comunidad'),
+                          Text('Zona'),
                           DropdownComunidadCarWidget(
                             id_municipio: Globalvalues.id_Municipio
                                 .value, // Asegúrate de que este ID tenga un valor válido

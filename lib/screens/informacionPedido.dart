@@ -38,7 +38,10 @@ class _InformacionpedidoState extends State<Informacionpedido> {
         ),
         body: Column(
           children: [
-            InformacionClientewidget(id),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: InformacionClientewidget(id),
+            ),
             Informacionpedidowidget(id),
           ],
         ));

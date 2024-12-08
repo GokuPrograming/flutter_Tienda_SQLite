@@ -25,10 +25,15 @@ class _ComunidadScreenState extends State<ComunidadScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Lista De Comunidades'),),
-      floatingActionButton: FloatingActionButton(onPressed: () {
-        modal(context, null, null);
-      }),
+      appBar: AppBar(
+        title: Text('Zonas en el TecNM Celaya'),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          modal(context, null, null);
+        },
+        child: Icon(Icons.add),
+      ),
       body: FutureBuilder<List<Map<String, dynamic>>?>(
         future: comunidadController.mostrarComunidadYMunicipio(),
         builder: (context, snapshot) {
@@ -115,7 +120,7 @@ class _ComunidadScreenState extends State<ComunidadScreen> {
             );
           } else {
             return const Center(
-              child: Text('No hay pedidos disponibles'),
+              child: Text('No hay Zonas Bro :V'),
             );
           }
         },
@@ -145,9 +150,8 @@ class _ComunidadScreenState extends State<ComunidadScreen> {
             children: [
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text(id_comunidad == null
-                    ? 'NUEVA COMUNIDAD'
-                    : 'EDITAR COMUNIDAD'),
+                child:
+                    Text(id_comunidad == null ? 'NUEVA ZONA' : 'EDITAR ZONA'),
               ),
               const SizedBox(height: 10),
               Padding(
@@ -155,7 +159,7 @@ class _ComunidadScreenState extends State<ComunidadScreen> {
                 child: TextFormField(
                   controller: conComunidad,
                   decoration: const InputDecoration(
-                    label: Text('COMUNIDAD'),
+                    label: Text('ZONA'),
                     prefixIcon: Icon(Icons.category_outlined),
                   ),
                 ),
@@ -197,31 +201,27 @@ class _ComunidadScreenState extends State<ComunidadScreen> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      ///valida si la categoria no esta vacia
-                      if (conComunidad.text.trim().isNotEmpty) {
+                      // Validamos que los campos no estén vacíos o nulos
+                      if (conComunidad.text.trim().isNotEmpty &&
+                          id_municipio != null) {
                         if (id_comunidad == null) {
-                          // Si id_categoria es nulo, significa que es una nueva categoría.
-                          // _agregarComunidad();
-                          print('¿¿¿¿¿¿¿¿¿');
-                          print('${conComunidad.text}' '${id_municipio}');
                           _agregarComunidad(conComunidad.text, id_municipio!);
                         } else {
-                          // Si id_categoria tiene un valor, significa que estamos editando.
-                          //_editarMucipio(id_municipio);
+                          // Si id_comunidad tiene un valor, estamos editando
                           _editarComunidad(
                               id_comunidad!, id_municipio, conComunidad.text);
-                          print('tiene comuniad');
-                          print(id_comunidad);
-                          print('tiene municipio');
-                          print(id_municipio);
-                          print('nombreCoomunidad');
-                          print(comunidad);
+                        
                         }
+
+                       
+                       // Navigator.pop(context);
                       } else {
+                        Navigator.pop(context);
+                        // Si algún campo es vacío o nulo, mostramos el mensaje de error
                         ScaffoldMessenger.of(context).hideCurrentSnackBar();
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                            content: Text('El campo no puede estar vacío'),
+                            content: Text('Debe llenar todos los campos'),
                             backgroundColor: Colors.orange,
                           ),
                         );

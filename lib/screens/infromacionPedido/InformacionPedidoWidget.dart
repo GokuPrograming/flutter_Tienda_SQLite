@@ -7,8 +7,7 @@ class Informacionpedidowidget extends StatefulWidget {
   const Informacionpedidowidget(this.id, {super.key}); // Constructor modificado
 
   @override
-  State<Informacionpedidowidget> createState() =>
-      _InformacionpedidowidgetState();
+  State<Informacionpedidowidget> createState() => _InformacionpedidowidgetState();
 }
 
 class _InformacionpedidowidgetState extends State<Informacionpedidowidget> {
@@ -16,16 +15,14 @@ class _InformacionpedidowidgetState extends State<Informacionpedidowidget> {
 
   @override
   Widget build(BuildContext context) {
-    final arguments = (ModalRoute.of(context)?.settings.arguments ??
-        <String, dynamic>{}) as Map;
+    final arguments = (ModalRoute.of(context)?.settings.arguments ?? <String, dynamic>{}) as Map;
 
     return Container(
       width: MediaQuery.of(context).size.width, // Ajuste en MediaQuery
-      height: MediaQuery.of(context).size.height * .58,
+      height: MediaQuery.of(context).size.height * .45,
       decoration: BoxDecoration(),
       child: FutureBuilder<List<Map<String, dynamic>>?>(
-        future: informacionPedido
-            .mostrarPedidosConListaPedido(widget.id), // Usar el id aquí
+        future: informacionPedido.mostrarPedidosConListaPedido(widget.id), // Usar el id aquí
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -54,12 +51,10 @@ class _InformacionpedidowidgetState extends State<Informacionpedidowidget> {
                                   SizedBox(height: 4.0),
                                   Text(
                                     'Precio: \$${pedido['precio']}',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
+                                    style: TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                   SizedBox(height: 4.0),
-                                  Text(
-                                      'Subtotal: ${pedido['subtotal'] ?? 0}'), // Ajuste en Subtotal
+                                  Text('Subtotal: ${pedido['subtotal'] ?? 0}'), // Ajuste en Subtotal
                                 ],
                               ),
                             ),
@@ -87,61 +82,45 @@ class _InformacionpedidowidgetState extends State<Informacionpedidowidget> {
                                   // Acción del primer botón
                                   ArtDialogResponse? response =
                                       await ArtSweetAlert.show(
-                                            barrierDismissible: false,
-                                            context: context,
-                                            artDialogArgs: ArtDialogArgs(
-                                              showCancelBtn: true,
-                                              title:
-                                                  "¿Seguro que quieres rechazarlo?",
-                                              // confirmButtonText: "Si",
-                                              confirmButtonColor: Colors.red,
-                                              confirmButtonText: 'Rechazar',
-                                              cancelButtonText: 'Cancelar',
-                                              onConfirm: () async {
-                                                await informacionPedido
-                                                        .CHANGE_STATUS(
-                                                            widget.id!, 3)
-                                                    ? ArtSweetAlert.show(
-                                                        context: context,
-                                                        artDialogArgs:
-                                                            ArtDialogArgs(
-                                                                type:
-                                                                    ArtSweetAlertType
-                                                                        .success,
-                                                                title:
-                                                                    "El pedido de rechazo",
-                                                                confirmButtonColor:
-                                                                    Colors
-                                                                        .green,
-                                                                onConfirm: () {
-                                                                  setState(() {
-                                                                    return;
-                                                                  });
-                                                                  Navigator.pushNamed(
-                                                                      context,
-                                                                      '/MenuScreen');
-                                                                }),
-                                                      )
-                                                    : ArtSweetAlert.show(
-                                                        context: context,
-                                                        artDialogArgs:
-                                                            ArtDialogArgs(
-                                                                type:
-                                                                    ArtSweetAlertType
-                                                                        .danger,
-                                                                title:
-                                                                    "No se pudo rechazar",
-                                                                confirmButtonColor:
-                                                                    Colors.red,
-                                                                onConfirm: () {
-                                                                  setState(
-                                                                      () {});
-                                                                }),
-                                                      );
-                                              },
-                                            ),
-                                          ) ??
-                                          null;
+                                    barrierDismissible: false,
+                                    context: context,
+                                    artDialogArgs: ArtDialogArgs(
+                                      showCancelBtn: true,
+                                      title: "¿Seguro que quieres rechazarlo?",
+                                      confirmButtonColor: Colors.red,
+                                      confirmButtonText: 'Rechazar',
+                                      cancelButtonText: 'Cancelar',
+                                      onConfirm: () async {
+                                        await informacionPedido
+                                                .CHANGE_STATUS(widget.id!, 3)
+                                            ? ArtSweetAlert.show(
+                                                context: context,
+                                                artDialogArgs: ArtDialogArgs(
+                                                    type: ArtSweetAlertType.success,
+                                                    title: "El pedido de rechazo",
+                                                    confirmButtonColor: Colors.green,
+                                                    onConfirm: () {
+                                                      setState(() {
+                                                        return;
+                                                      });
+                                                      Navigator.pushNamed(
+                                                          context, '/MenuScreen');
+                                                    }),
+                                              )
+                                            : ArtSweetAlert.show(
+                                                context: context,
+                                                artDialogArgs: ArtDialogArgs(
+                                                    type: ArtSweetAlertType.danger,
+                                                    title: "No se pudo rechazar",
+                                                    confirmButtonColor: Colors.red,
+                                                    onConfirm: () {
+                                                      setState(() {});
+                                                    }),
+                                              );
+                                      },
+                                    ),
+                                  ) ??
+                                      null;
                                   if (response == null) {
                                     return;
                                   }
@@ -150,8 +129,7 @@ class _InformacionpedidowidgetState extends State<Informacionpedidowidget> {
                                     return;
                                   }
                                 },
-                                child: Text("Rechazar",
-                                    style: TextStyle(color: Colors.white)),
+                                child: Text("Rechazar", style: TextStyle(color: Colors.white)),
                               ),
                             ),
                           ),
@@ -170,62 +148,45 @@ class _InformacionpedidowidgetState extends State<Informacionpedidowidget> {
                                   // Acción del primer botón
                                   ArtDialogResponse? response =
                                       await ArtSweetAlert.show(
-                                            barrierDismissible: false,
-                                            context: context,
-                                            artDialogArgs: ArtDialogArgs(
-                                              showCancelBtn: true,
-                                              title:
-                                                  "¿Seguro que quieres completar el pedido?",
-                                              // confirmButtonText: "Si",
-                                              confirmButtonColor: Colors.green,
-                                              confirmButtonText:
-                                                  'Completar pedido',
-                                              cancelButtonText: 'Cancelar',
-                                              onConfirm: () async {
-                                                await informacionPedido
-                                                        .CHANGE_STATUS(
-                                                            widget.id!, 1)
-                                                    ? ArtSweetAlert.show(
-                                                        context: context,
-                                                        artDialogArgs:
-                                                            ArtDialogArgs(
-                                                                type:
-                                                                    ArtSweetAlertType
-                                                                        .success,
-                                                                title:
-                                                                    "El pedido se completo",
-                                                                confirmButtonColor:
-                                                                    Colors
-                                                                        .green,
-                                                                onConfirm: () {
-                                                                  setState(() {
-                                                                    return;
-                                                                  });
-                                                                  Navigator.pushNamed(
-                                                                      context,
-                                                                      '/MenuScreen');
-                                                                }),
-                                                      )
-                                                    : ArtSweetAlert.show(
-                                                        context: context,
-                                                        artDialogArgs:
-                                                            ArtDialogArgs(
-                                                                type:
-                                                                    ArtSweetAlertType
-                                                                        .danger,
-                                                                title:
-                                                                    "No se pudo completar el pedido",
-                                                                confirmButtonColor:
-                                                                    Colors.red,
-                                                                onConfirm: () {
-                                                                  setState(
-                                                                      () {});
-                                                                }),
-                                                      );
-                                              },
-                                            ),
-                                          ) ??
-                                          null;
+                                    barrierDismissible: false,
+                                    context: context,
+                                    artDialogArgs: ArtDialogArgs(
+                                      showCancelBtn: true,
+                                      title: "¿Seguro que quieres completar el pedido?",
+                                      confirmButtonColor: Colors.green,
+                                      confirmButtonText: 'Completar pedido',
+                                      cancelButtonText: 'Cancelar',
+                                      onConfirm: () async {
+                                        await informacionPedido
+                                                .CHANGE_STATUS(widget.id!, 1)
+                                            ? ArtSweetAlert.show(
+                                                context: context,
+                                                artDialogArgs: ArtDialogArgs(
+                                                    type: ArtSweetAlertType.success,
+                                                    title: "El pedido se completo",
+                                                    confirmButtonColor: Colors.green,
+                                                    onConfirm: () {
+                                                      setState(() {
+                                                        return;
+                                                      });
+                                                      Navigator.pushNamed(
+                                                          context, '/MenuScreen');
+                                                    }),
+                                              )
+                                            : ArtSweetAlert.show(
+                                                context: context,
+                                                artDialogArgs: ArtDialogArgs(
+                                                    type: ArtSweetAlertType.danger,
+                                                    title: "No se pudo completar el pedido",
+                                                    confirmButtonColor: Colors.red,
+                                                    onConfirm: () {
+                                                      setState(() {});
+                                                    }),
+                                              );
+                                      },
+                                    ),
+                                  ) ??
+                                      null;
                                   if (response == null) {
                                     return;
                                   }
@@ -234,8 +195,7 @@ class _InformacionpedidowidgetState extends State<Informacionpedidowidget> {
                                     return;
                                   }
                                 },
-                                child: Text("Completar",
-                                    style: TextStyle(color: Colors.white)),
+                                child: Text("Completar", style: TextStyle(color: Colors.white)),
                               ),
                             ),
                           ),
