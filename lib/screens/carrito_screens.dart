@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:counter_button/counter_button.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:store_sqlite/backend/producto_controller.dart';
 import 'package:store_sqlite/config/globalValues.dart';
 import 'package:store_sqlite/controller/carrito_controller.dart';
 import 'package:store_sqlite/controller/direccion_controller.dart';
@@ -23,6 +27,8 @@ class CarritoScreens extends StatefulWidget {
 
 class _CarritoScreensState extends State<CarritoScreens> {
   // static ValueNotifier<bool> refrescarCarrito = ValueNotifier(true);
+  ProductoController productoController = new ProductoController();
+
   CarritoController carritoController = CarritoController();
   List<int> _counterValues = [];
   int? id_municipio;
@@ -37,12 +43,31 @@ class _CarritoScreensState extends State<CarritoScreens> {
   final toast = ToastNotification();
 
   late TiendaDataBase db;
-
+  String total = "";
   @override
   void initState() {
     super.initState();
     db = TiendaDataBase();
+    fetchData();
     // id_municipio = 1;
+  }
+
+  Future<void> fetchData() async {
+    final response = await http.get(
+        Uri.parse('https://backen-linsfood.onrender.com/api/totalCarrito'));
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+
+      setState(() {
+        // Verificamos si 'total' existe y no es null
+        total = data.isNotEmpty && data[0]['total'] != null
+            ? data[0]['total']
+            : 'No disponible';
+      });
+    } else {
+      throw Exception('Failed to load data');
+    }
   }
 
   @override
@@ -50,6 +75,12 @@ class _CarritoScreensState extends State<CarritoScreens> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Carrito'),
+        actions: [
+          total.isEmpty
+              ? CircularProgressIndicator() // Muestra el indicador de carga mientras se obtiene el dato
+              : Text('Total: $total',
+                  style: TextStyle(fontSize: 24)), // Muestra el dato obtenido
+        ],
       ),
       floatingActionButton: ValueListenableBuilder(
         valueListenable: Globalvalues.id_Municipio,
@@ -124,6 +155,7 @@ class _CarritoScreensState extends State<CarritoScreens> {
                           //   ),
                           // ),
                           Text('Campus:'),
+
                           DropdownMunicipioCarWidget(
                             id_municipio,
                             onChanged: (MunicipioModel? municipio) {
@@ -143,6 +175,7 @@ class _CarritoScreensState extends State<CarritoScreens> {
                             },
                           ),
                           Text('Zona'),
+
                           DropdownComunidadCarWidget(
                             id_municipio: Globalvalues.id_Municipio
                                 .value, // Asegúrate de que este ID tenga un valor válido
@@ -239,17 +272,28 @@ class _CarritoScreensState extends State<CarritoScreens> {
                                         'fecha_entrega': fecha
                                             .toString(), // O asigna la fecha específica
                                       };
+                                      int res = await productoController
+                                          .ProcesarPedido(
+                                        id_comunidad!,
+                                        calle,
+                                        colonia,
+                                        noExterior,
+                                        noInterior,
+                                        telefono,
+                                        nombreCliente,
+                                        fecha,
+                                      );
 
                                       // Llama a la función para crear el pedido y la dirección
-                                      int res = await db.CREATE_PEDIDO(
-                                          pedido, direccion);
+                                      // int res = await db.CREATE_PEDIDO(
+                                      //     pedido, direccion);
                                       print('RES CREATE: ${res}');
                                       if (res > 0)
                                         setState(() {
                                           Globalvalues.refrescarCarrito.value =
                                               !Globalvalues
                                                   .refrescarCarrito.value;
-
+                                          fetchData();
                                           Navigator.pop(context);
                                           toast.showToast(
                                               context,
@@ -302,7 +346,7 @@ class _CarritoScreensState extends State<CarritoScreens> {
         valueListenable: Globalvalues.refrescarCarrito,
         builder: (BuildContext context, dynamic value, Widget? child) {
           return FutureBuilder<List<Map<String, dynamic>>?>(
-            future: carritoController.mostrarTodosLosCarritos(),
+            future: productoController.mostrarCarrito(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(
@@ -372,7 +416,7 @@ class _CarritoScreensState extends State<CarritoScreens> {
                                           const SizedBox(
                                               height: 2), // Espacio adicional
                                           Text(
-                                            'Subtotal: \$${carrito['subtotal'].toStringAsFixed(2)}', // Formato de precio
+                                            'Subtotal: \$${carrito['subtotal']}', // Formato de precio
                                             style: const TextStyle(
                                               fontSize: 16,
                                               color: Colors
@@ -386,11 +430,12 @@ class _CarritoScreensState extends State<CarritoScreens> {
                                     ),
                                     IconButton(
                                       onPressed: () async {
-                                        int res = await carritoController
-                                            .eliminarCarrito('carrito',
+                                        int res = await productoController
+                                            .BorrarDeCarrito(
                                                 carrito['id_producto']);
                                         if (res > 0) {
                                           setState(() {
+                                            fetchData();
                                             Globalvalues
                                                     .refrescarCarrito.value =
                                                 !Globalvalues
