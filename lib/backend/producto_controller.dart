@@ -1,5 +1,9 @@
 import 'dart:convert'; // Para convertir la respuesta JSON en un objeto Dart
-import 'package:http/http.dart' as http; // Importamos la librería http
+import 'package:http/http.dart' as http;
+import 'package:store_sqlite/backend/lista_productoModel.dart';
+import 'package:store_sqlite/backend/pedidoModel_back.dart';
+import 'package:store_sqlite/models/direccion_model.dart';
+import 'package:store_sqlite/models/pedido_model.dart'; // Importamos la librería http
 
 class ProductoController {
   // URL base de la API
@@ -215,6 +219,169 @@ class ProductoController {
     } catch (e) {
       print('Error en ProcesarPedido: $e');
       return 0; // Indicar fallo
+    }
+  }
+
+  Future<List<PedidoModel>> MostrarTodosLosPedidos() async {
+    try {
+      final response = await http.get(Uri.parse(
+          'https://backen-linsfood.onrender.com/api/todosLosPedidos'));
+
+      if (response.statusCode == 200) {
+        List<dynamic> data = json.decode(response.body);
+        // Convierte cada elemento del JSON a PedidoModel
+        return data.map((item) => PedidoModel.fromMap(item)).toList();
+      } else {
+        throw Exception('Failed to load pedidos');
+      }
+    } catch (e) {
+      throw Exception('Error fetching pedidos: $e');
+    }
+  }
+
+  Future<List<PedidoModel>> MostrarTodosLosPedidosEnEspera() async {
+    try {
+      final response = await http.get(Uri.parse(
+          'https://backen-linsfood.onrender.com/api/pedidos_en_espera'));
+
+      if (response.statusCode == 200) {
+        List<dynamic> data = json.decode(response.body);
+        // Convierte cada elemento del JSON a PedidoModel
+        return data.map((item) => PedidoModel.fromMap(item)).toList();
+      } else {
+        throw Exception('Failed to load pedidos');
+      }
+    } catch (e) {
+      throw Exception('Error fetching pedidos: $e');
+    }
+  }
+
+  Future<List<PedidoModel>> MostrarTodosLosPedidosCompletados() async {
+    try {
+      final response = await http.get(Uri.parse(
+          'https://backen-linsfood.onrender.com/api/pedidosCompletados'));
+
+      if (response.statusCode == 200) {
+        List<dynamic> data = json.decode(response.body);
+        // Convierte cada elemento del JSON a PedidoModel
+        return data.map((item) => PedidoModel.fromMap(item)).toList();
+      } else {
+        throw Exception('Failed to load pedidos');
+      }
+    } catch (e) {
+      throw Exception('Error fetching pedidos: $e');
+    }
+  }
+
+  Future<List<PedidomodelBack>> MostrarDireccionPedido(int? id_pedido) async {
+    try {
+      final response = await http.post(
+        Uri.parse(
+            'https://backen-linsfood.onrender.com/api/mostrarDireccionPedido'),
+        body: json.encode({'id_pedido': id_pedido}),
+        headers: {"Content-Type": "application/json"},
+      );
+
+      if (response.statusCode == 200) {
+        List<dynamic> data = json.decode(response.body);
+
+        // Imprimir los datos recibidos para depuración
+        print("Datos recibidos:");
+        print(data);
+
+        // Convertir a la lista de PedidomodelBack
+        List<PedidomodelBack> pedidos =
+            data.map((item) => PedidomodelBack.fromMap(item)).toList();
+
+        // Imprimir los objetos PedidomodelBack para ver sus valores
+        print("Objetos PedidomodelBack:");
+        pedidos.forEach((pedido) {
+          print("Nombre Cliente: ${pedido.nombreCliente}");
+          print("Teléfono: ${pedido.numTelefono}");
+          print("Municipio: ${pedido.municipio}");
+          print("Comunidad: ${pedido.comunidad}");
+          print("Calle: ${pedido.calle}");
+          print("Colonia: ${pedido.colonia}");
+          print("No Exterior: ${pedido.noExterior}");
+        });
+
+        return pedidos;
+      } else {
+        throw Exception('Failed to load pedidos');
+      }
+    } catch (e) {
+      throw Exception('Error fetching pedidos: $e');
+    }
+  }
+
+  Future<List<ListaProducto>> mostrarProductosPedido(int? id_pedido) async {
+    try {
+      final response = await http.post(
+        Uri.parse(
+            'https://backen-linsfood.onrender.com/api/mostrarProductosPedido'),
+        body: json.encode({'id_pedido': id_pedido}),
+        headers: {"Content-Type": "application/json"},
+      );
+
+      if (response.statusCode == 200) {
+        List<dynamic> data = json.decode(response.body);
+
+        // Imprimir los datos recibidos para depuración
+        print("Datos recibidos:");
+        print(data);
+
+        // Convertir a la lista de ListaProducto
+        List<ListaProducto> pedidos =
+            data.map((item) => ListaProducto.fromMap(item)).toList();
+
+        // Imprimir los objetos ListaProducto para ver sus valores
+        pedidos.forEach((pedido) {
+          print("Producto: ${pedido.producto}");
+          print("Cantidad: ${pedido.cantidad}");
+          print("Precio: ${pedido.precio}");
+          print("Subtotal: ${pedido.subtotal}");
+        });
+
+        return pedidos;
+      } else {
+        throw Exception('Failed to load productos');
+      }
+    } catch (e) {
+      throw Exception('Error fetching productos: $e');
+    }
+  }
+
+  Future<bool> changeStatus(int idPedido, int idStatus) async {
+    try {
+      print('////////////////////////////////////////////////////');
+      print('el id del pedido es= $idPedido  y el estatus= $idStatus');
+      print('////////////////////////////////////////////////////');
+      // Realizar la solicitud POST al endpoint de cambio de estado
+      final response = await http.post(
+        Uri.parse(
+            'https://backen-linsfood.onrender.com/api/actualizarEstadoPedido'),
+        body: json.encode({
+          'id_pedido': idPedido,
+          'id_status': idStatus,
+        }),
+        headers: {"Content-Type": "application/json"},
+      );
+
+      // Verificar el estado de la respuesta
+      if (response.statusCode == 200) {
+        // Decodificar la respuesta y verificar el éxito
+        final data = json.decode(response.body);
+        print("Respuesta del servidor: $data");
+
+        // Evaluar si la operación fue exitosa según la respuesta
+        return data['success'] == true;
+      } else {
+        print("Error al cambiar el estado del pedido: ${response.statusCode}");
+        return false;
+      }
+    } catch (e) {
+      print("Excepción al cambiar el estado del pedido: $e");
+      return false;
     }
   }
 }

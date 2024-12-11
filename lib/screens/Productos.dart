@@ -230,7 +230,7 @@ class _CardWidgetToCarritoState extends State<CardWidgetToCarrito> {
                   children: [
                     // Precio del producto con texto más pequeño
                     Text(
-                      '\$${widget.producto['price'] ?? '0'}',
+                      '\$${widget.producto['precio'] ?? '0'}',
                       style: TextStyle(
                         fontSize: 14, // Texto más pequeño
                         fontWeight: FontWeight.bold,

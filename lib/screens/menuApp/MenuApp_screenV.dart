@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:store_sqlite/config/globalValues.dart';
 import 'package:store_sqlite/controller/carrito_controller.dart';
 import 'package:store_sqlite/screens/calendarScreen.dart';
+import 'package:store_sqlite/screens/menuApp/widgetMenuApp/PedidosListaCompletados.dart';
+import 'package:store_sqlite/screens/menuApp/widgetMenuApp/PedidosListaEspera.dart';
 import 'package:store_sqlite/screens/menuApp/widgetMenuApp/PedidosListaWidget.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:badges/badges.dart' as badges;
@@ -136,12 +138,12 @@ class _MenuappScreenvState extends State<MenuappScreenv> {
       opc: 0,
     )),
     Center(
-        child: Pedidoslistawidget(
+        child: Pedidoslistaespera(
       opc: 1,
     )),
     Center(child: TableBasicsExample()),
     Center(
-        child: Pedidoslistawidget(
+        child: Pedidoslistacompletados(
       opc: 2,
     )),
   ];

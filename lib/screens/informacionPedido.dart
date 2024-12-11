@@ -42,7 +42,7 @@ class _InformacionpedidoState extends State<Informacionpedido> {
               padding: const EdgeInsets.all(8.0),
               child: InformacionClientewidget(id),
             ),
-            Informacionpedidowidget(id),
+           Informacionpedidowidget(id),
           ],
         ));
   }
